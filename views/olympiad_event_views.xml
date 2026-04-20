@@ -38,6 +38,15 @@
                             </div>
                             <field name="category_ids" widget="many2many_checkboxes"/>
                         </page>
+                        <page string="Accommodation Dates" name="accommodation_dates">
+                            <field name="accommodation_ids" context="{'default_date': dates}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="date"/>
+                                    <field name="label" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
                 <chatter/>

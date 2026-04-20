@@ -28,6 +28,12 @@ class OlympiadEvent(models.Model):
         string='Categories',
         help="Categories active for this event."
     )
+    accommodation_ids = fields.One2many(
+        'sp_olympiad.event.accommodation',
+        'event_id',
+        string='Accommodation Dates',
+        copy=True,
+    )
 
     @api.constrains('code_prefix')
     def _check_code_prefix_length(self):
@@ -47,4 +53,3 @@ class OlympiadEvent(models.Model):
             if record.state == 'finished':
                 if not record.date_end or record.date_end > fields.Date.today():
                     raise ValidationError("You cannot set the event to 'Finished' before its End Date has passed.")
-

@@ -1,0 +1,41 @@
+from odoo import api, fields, models
+
+
+class OlympiadEventAccommodation(models.Model):
+    _name = 'sp_olympiad.event.accommodation'
+    _description = 'Olympiad Event Accommodation Date'
+    _order = 'sequence, date, id'
+
+    @api.model
+    def _default_date(self):
+        if self.env.context.get('default_date'):
+            return self.env.context.get('default_date')
+        event_id = self.env.context.get('default_event_id')
+        if not event_id:
+            return False
+        event = self.env['sp_olympiad.event'].browse(event_id)
+        return event.dates or False
+
+    event_id = fields.Many2one(
+        'sp_olympiad.event',
+        string='Event',
+        required=True,
+        ondelete='cascade',
+        index=True,
+    )
+    date = fields.Date(
+        string='Date',
+        required=True,
+        default=_default_date,
+    )
+    sequence = fields.Integer(string='Sequence', default=10)
+    label = fields.Char(
+        string='Label',
+        compute='_compute_label',
+        store=True,
+    )
+
+    @api.depends('date')
+    def _compute_label(self):
+        for record in self:
+            record.label = fields.Date.to_string(record.date) if record.date else False
