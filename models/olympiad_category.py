@@ -36,8 +36,45 @@ class OlympiadCategory(models.Model):
         for record in self:
             record.is_solo = record.max_participants == 1
 
+    @api.model
+    def _get_max_participants_limit(self):
+        limit_str = self.env['ir.config_parameter'].sudo().get_param(
+            'sp_olympiad.category_max_participants_limit',
+            default='10',
+        )
+        try:
+            max_allowed = int(limit_str)
+        except (TypeError, ValueError):
+            max_allowed = 10
+        return max(max_allowed, 1)
+
+    @api.onchange('max_participants')
+    def _onchange_max_participants_limit(self):
+        max_allowed = self._get_max_participants_limit()
+        if self.max_participants and self.max_participants > max_allowed:
+            self.max_participants = max_allowed
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields=allfields, attributes=attributes)
+        if 'max_participants' in res:
+            max_allowed = self._get_max_participants_limit()
+            res['max_participants']['help'] = (
+                f'Maximum number of students allowed in a project for this category. '
+                f'Current system limit: {max_allowed}. '
+                'For higher values, ask an administrator to update '
+                '"Category Max Participants Limit" in Olympiad General Settings.'
+            )
+        return res
+
     @api.constrains('max_participants')
     def _check_max_participants(self):
+        max_allowed = self._get_max_participants_limit()
         for record in self:
             if record.max_participants < 1:
                 raise ValidationError('Max Participants must be at least 1.')
+            if record.max_participants > max_allowed:
+                raise ValidationError(
+                    f'Max Participants cannot be greater than {max_allowed}. '
+                    'You can change this value in Olympiad General Settings.'
+                )

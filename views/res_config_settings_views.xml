@@ -23,6 +23,9 @@
                             <setting string="Competition Name" help="Set the official name of the competition.">
                                 <field name="olympiad_name" placeholder="e.g. International Biology Olympiad"/>
                             </setting>
+                            <setting string="Category Max Participants Limit" help="Upper limit used to validate category Max Participants.">
+                                <field name="category_max_participants_limit"/>
+                            </setting>
                         </block>
                     </app>
                 </xpath>
