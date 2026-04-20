@@ -21,8 +21,8 @@
                             <field name="code_prefix"/>
                         </group>
                         <group>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
+                            <field name="dates" widget="daterange" options="{'end_date_field': 'date_end'}"/>
+                            <field name="date_end" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -53,8 +53,8 @@
             <list string="Events" editable="bottom">
                 <field name="name"/>
                 <field name="code_prefix"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
+                <field name="dates" widget="daterange" options="{'end_date_field': 'date_end'}" string="Dates"/>
+                <field name="date_end" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-success="state == 'open'" decoration-danger="state == 'cancelled'" decoration-info="state == 'draft'"/>
             </list>
         </field>
@@ -69,7 +69,7 @@
                 <field name="name"/>
                 <field name="code_prefix"/>
                 <field name="state"/>
-                <field name="date_start"/>
+                <field name="dates"/>
                 <field name="date_end"/>
                 <templates>
                     <t t-name="card">
@@ -88,7 +88,7 @@
                                     </strong>
                                 </div>
                                 <div class="text-muted small">
-                                    <field name="date_start"/> - <field name="date_end"/>
+                                    <field name="dates"/> - <field name="date_end"/>
                                 </div>
                                 <div class="mt-2">
                                     <field name="state" widget="label_selection" options="{'classes': {'open': 'success', 'cancelled': 'danger', 'draft': 'info', 'finished': 'warning'}}"/>

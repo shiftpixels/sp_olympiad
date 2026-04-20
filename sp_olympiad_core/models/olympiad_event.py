@@ -15,7 +15,7 @@ class OlympiadEvent(models.Model):
         tracking=True,
         help="The prefix used to generate unique codes for projects in this event (e.g. OLY-)."
     )
-    date_start = fields.Date(string='Start Date', tracking=True)
+    dates = fields.Date(string='Dates', tracking=True)
     date_end = fields.Date(string='End Date', tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -34,6 +34,12 @@ class OlympiadEvent(models.Model):
         for record in self:
             if record.code_prefix and len(record.code_prefix) > 5:
                 raise ValidationError('Code Prefix cannot exceed 5 characters.')
+
+    @api.constrains('dates', 'date_end')
+    def _check_date_range(self):
+        for record in self:
+            if record.dates and record.date_end and record.dates > record.date_end:
+                raise ValidationError("Start Date must be before or equal to End Date.")
 
     @api.constrains('state', 'date_end')
     def _check_finished_state(self):
