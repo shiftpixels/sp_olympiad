@@ -31,7 +31,7 @@
                                 <i class="fa fa-info-circle me-1"/>
                                 Select the categories that will be active for this event. 
                                 To add or edit global categories, please go to 
-                                <button name="%(sp_olympiad_core.action_olympiad_category)d" 
+                                <button name="%(sp_olympiad.action_olympiad_category)d" 
                                         type="action" 
                                         class="btn-link p-0 align-baseline" 
                                         string="Configuration / Categories"/>.
@@ -65,7 +65,7 @@
         <field name="name">sp_olympiad.event.kanban</field>
         <field name="model">sp_olympiad.event</field>
         <field name="arch" type="xml">
-            <kanban on_create="quick_create" quick_create_view="sp_olympiad_core.view_olympiad_event_form">
+            <kanban on_create="quick_create" quick_create_view="sp_olympiad.view_olympiad_event_form">
                 <field name="name"/>
                 <field name="code_prefix"/>
                 <field name="state"/>
