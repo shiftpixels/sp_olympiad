@@ -28,6 +28,31 @@ class OlympiadEvent(models.Model):
         string='Categories',
         help="Categories active for this event."
     )
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        required=True,
+        default=lambda self: self.env.company.currency_id.id,
+        help='Currency used for all event pricing fields.',
+    )
+    registration_fee = fields.Monetary(
+        string='Registration Fee',
+        currency_field='currency_id',
+        default=200.0,
+        help='Base fee per project registration.',
+    )
+    accommodation_fee = fields.Monetary(
+        string='Accommodation Fee',
+        currency_field='currency_id',
+        default=50.0,
+        help='Fee per person per night.',
+    )
+    excursion_fee = fields.Monetary(
+        string='Excursion Fee',
+        currency_field='currency_id',
+        default=200.0,
+        help='Excursion fee per person.',
+    )
     accommodation_ids = fields.One2many(
         'sp_olympiad.event.accommodation',
         'event_id',

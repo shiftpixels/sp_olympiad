@@ -26,6 +26,18 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Pricing" name="pricing">
+                            <group>
+                                <group>
+                                    <field name="currency_id"/>
+                                </group>
+                                <group>
+                                    <field name="registration_fee"/>
+                                    <field name="accommodation_fee"/>
+                                    <field name="excursion_fee"/>
+                                </group>
+                            </group>
+                        </page>
                         <page string="Categories" name="categories">
                             <div class="alert alert-info" role="alert">
                                 <i class="fa fa-info-circle me-1"/>
