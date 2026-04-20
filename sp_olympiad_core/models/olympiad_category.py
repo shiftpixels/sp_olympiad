@@ -1,0 +1,18 @@
+from odoo import api, fields, models
+
+class OlympiadCategory(models.Model):
+    _name = 'sp_olympiad.category'
+    _description = 'Olympiad Category'
+    _order = 'name'
+
+    name = fields.Char(string='Category Name', required=True, translate=True)
+    code = fields.Char(string='Code', required=True, help="Short code for this category (e.g. ENV, BIO)")
+    sequence = fields.Integer(default=10, help="Determines the display order in the list and on the website (lower numbers appear first).")
+    image = fields.Image(string='Category Image', max_width=512, max_height=512)
+    description = fields.Html(string='Web Description', translate=True)
+    criteria = fields.Html(string='Evaluation Criteria', translate=True)
+    active = fields.Boolean(default=True)
+
+    _sql_constraints = [
+        ('code_unique', 'unique(code)', 'Category code must be unique!')
+    ]

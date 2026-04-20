@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Event Form View -->
+    <record id="view_olympiad_event_form" model="ir.ui.view">
+        <field name="name">sp_olympiad.event.form</field>
+        <field name="model">sp_olympiad.event</field>
+        <field name="arch" type="xml">
+            <form string="Olympiad Event">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,finished" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Innovate Germany 2027"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code_prefix"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Categories" name="categories">
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle me-1"/>
+                                Select the categories that will be active for this event. 
+                                To add or edit global categories, please go to 
+                                <button name="%(sp_olympiad_core.action_olympiad_category)d" 
+                                        type="action" 
+                                        class="btn-link p-0 align-baseline" 
+                                        string="Configuration / Categories"/>.
+                            </div>
+                            <field name="category_ids" widget="many2many_checkboxes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Event List View -->
+    <record id="view_olympiad_event_list" model="ir.ui.view">
+        <field name="name">sp_olympiad.event.list</field>
+        <field name="model">sp_olympiad.event</field>
+        <field name="arch" type="xml">
+            <list string="Events" editable="bottom">
+                <field name="name"/>
+                <field name="code_prefix"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="state" widget="badge" decoration-success="state == 'open'" decoration-danger="state == 'cancelled'" decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Event Kanban View -->
+    <record id="view_olympiad_event_kanban" model="ir.ui.view">
+        <field name="name">sp_olympiad.event.kanban</field>
+        <field name="model">sp_olympiad.event</field>
+        <field name="arch" type="xml">
+            <kanban on_create="quick_create" quick_create_view="sp_olympiad_core.view_olympiad_event_form">
+                <field name="name"/>
+                <field name="code_prefix"/>
+                <field name="state"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click d-flex align-items-center" style="width: 800px !important;">
+                            <!-- Left: Prefix Icon Box -->
+                            <div class="d-flex align-items-center justify-content-center bg-primary text-white rounded me-3" 
+                                 style="width: 70px; height: 70px; flex-shrink: 0; font-size: 16px; font-weight: bold;">
+                                <field name="code_prefix"/>
+                            </div>
+                            
+                            <!-- Right: Content -->
+                            <div class="flex-grow-1">
+                                <div class="o_kanban_record_top">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <div class="text-muted small">
+                                    <field name="date_start"/> - <field name="date_end"/>
+                                </div>
+                                <div class="mt-2">
+                                    <field name="state" widget="label_selection" options="{'classes': {'open': 'success', 'cancelled': 'danger', 'draft': 'info', 'finished': 'warning'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_olympiad_event" model="ir.actions.act_window">
+        <field name="name">Events</field>
+        <field name="res_model">sp_olympiad.event</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Olympiad Event
+            </p>
+        </field>
+    </record>
+</odoo>

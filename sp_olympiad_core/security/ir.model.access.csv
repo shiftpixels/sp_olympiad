@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sp_olympiad_event_user,sp.olympiad.event.user,model_sp_olympiad_event,base.group_user,1,1,1,1
+access_sp_olympiad_category_user,sp.olympiad.category.user,model_sp_olympiad_category,base.group_user,1,1,1,1
+access_sp_olympiad_category_public,sp.olympiad.category.public,model_sp_olympiad_category,base.group_public,1,0,0,0
+access_sp_olympiad_category_portal,sp.olympiad.category.portal,model_sp_olympiad_category,base.group_portal,1,0,0,0

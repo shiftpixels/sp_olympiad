@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom Paper Format (2.5 cm margins) -->
+    <record id="paperformat_olympiad_standard" model="report.paperformat">
+        <field name="name">Olympiad Standard (2.5cm Margins)</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">25</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">25</field>
+        <field name="margin_right">25</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="action_report_category_criteria" model="ir.actions.report">
+        <field name="name">Evaluation Criteria</field>
+        <field name="model">sp_olympiad.category</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sp_olympiad_core.report_category_criteria_template</field>
+        <field name="report_file">sp_olympiad_core.report_category_criteria_template</field>
+        <field name="print_report_name">'Evaluation_Criteria_%s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sp_olympiad_category"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_olympiad_standard"/>
+    </record>
+
+    <!-- PDF Template -->
+    <template id="report_category_criteria_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <style>
+                            .page table {
+                                border: 1px solid black !important;
+                                border-collapse: collapse !important;
+                                width: 100% !important;
+                                margin-bottom: 20px !important;
+                            }
+                            .page table td, .page table th {
+                                border: 1px solid black !important;
+                                padding: 8px !important;
+                            }
+                            .page table th {
+                                background-color: #f2f2f2 !important;
+                                font-weight: bold !important;
+                            }
+                        </style>
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bold">Olympiad Evaluation Criteria</h2>
+                            <hr/>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h3 class="text-primary"><span t-field="o.name"/> (<span t-field="o.code"/>)</h3>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h4 class="border-bottom pb-2">Criteria Details</h4>
+                            <div class="prose mt-3" t-field="o.criteria"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
