@@ -31,11 +31,5 @@ class OlympiadEventAccommodation(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     label = fields.Char(
         string='Label',
-        compute='_compute_label',
-        store=True,
+        help='Short admin note for this day (e.g. Arrival, Registration Desk, City Tour).',
     )
-
-    @api.depends('date')
-    def _compute_label(self):
-        for record in self:
-            record.label = fields.Date.to_string(record.date) if record.date else False

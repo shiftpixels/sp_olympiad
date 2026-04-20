@@ -39,12 +39,32 @@
                             <field name="category_ids" widget="many2many_checkboxes"/>
                         </page>
                         <page string="Accommodation Dates" name="accommodation_dates">
-                            <field name="accommodation_ids" context="{'default_date': dates}">
-                                <list editable="bottom">
-                                    <field name="sequence" widget="handle"/>
+                            <field name="accommodation_ids" context="{'default_date': dates}" options="{'no_open': True}">
+                                <kanban>
+                                    <field name="sequence"/>
+                                    <field name="label"/>
                                     <field name="date"/>
-                                    <field name="label" readonly="1"/>
-                                </list>
+                                    <templates>
+                                        <t t-name="card">
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="fw-semibold">
+                                                    <field name="label"/>
+                                                </div>
+                                                <div class="text-muted">
+                                                    <i class="fa fa-calendar me-1"/>
+                                                    <field name="date"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Accommodation Date">
+                                    <group>
+                                        <field name="sequence"/>
+                                        <field name="label"/>
+                                        <field name="date"/>
+                                    </group>
+                                </form>
                             </field>
                         </page>
                     </notebook>
