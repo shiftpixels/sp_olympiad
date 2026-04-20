@@ -23,4 +23,10 @@
               parent="menu_olympiad_config"
               action="action_olympiad_category"
               sequence="10"/>
+
+    <menuitem id="menu_olympiad_settings"
+              name="General Settings"
+              parent="menu_olympiad_config"
+              action="action_sp_olympiad_config_settings"
+              sequence="20"/>
 </odoo>

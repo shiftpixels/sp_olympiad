@@ -43,28 +43,30 @@
                                 border: 1px solid #000 !important;
                                 border-collapse: collapse !important;
                                 width: 100% !important;
-                                margin-bottom: 20px !important;
+                                margin-bottom: 10px !important;
                                 table-layout: auto !important;
-                                page-break-inside: avoid !important; /* Ensure table doesn't split */
-                                font-size: 0.85rem !important; /* Slightly smaller font */
+                                page-break-inside: avoid !important;
+                                font-size: 0.75rem !important; /* Reduced from 0.85rem */
                             }
                             .page table td, .page table th {
                                 border: 1px solid #000 !important;
-                                padding: 6px 8px !important; /* Compact padding */
+                                padding: 4px 6px !important; /* More compact padding */
                                 vertical-align: top !important;
                                 word-wrap: break-word !important;
                             }
                             .page table th {
-                                background-color: #f8f9fa !important;
+                                background-color: #f2f2f2 !important;
                                 font-weight: bold !important;
                                 text-transform: uppercase !important;
-                                font-size: 0.75rem !important;
+                                font-size: 0.7rem !important;
                                 border-bottom: 2px solid #000 !important;
                             }
-                            /* Force images in criteria to stay within bounds */
-                            .page img {
-                                max-width: 100% !important;
+                            /* Force images in criteria to stay small */
+                            .page .criteria-content img {
+                                max-width: 250px !important; /* Limit image width */
                                 height: auto !important;
+                                display: block;
+                                margin: 5px 0;
                             }
                         </style>
                         <div class="text-center mb-4">
