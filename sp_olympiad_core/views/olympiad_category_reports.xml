@@ -2,16 +2,16 @@
 <odoo>
     <!-- Custom Paper Format (2.5 cm margins) -->
     <record id="paperformat_olympiad_standard" model="report.paperformat">
-        <field name="name">Olympiad Standard (2.5cm Margins)</field>
+        <field name="name">Olympiad Standard (Landscape, 1cm Margins)</field>
         <field name="default" eval="True"/>
         <field name="format">A4</field>
-        <field name="orientation">Portrait</field>
-        <field name="margin_top">25</field>
-        <field name="margin_bottom">25</field>
-        <field name="margin_left">25</field>
-        <field name="margin_right">25</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">5</field>
         <field name="header_line" eval="False"/>
-        <field name="header_spacing">20</field>
+        <field name="header_spacing">10</field>
         <field name="dpi">90</field>
     </record>
 
@@ -35,35 +35,54 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <style>
+                            .page {
+                                font-family: 'Helvetica', 'Arial', sans-serif !important;
+                                color: #333 !important;
+                            }
                             .page table {
-                                border: 1px solid black !important;
+                                border: 1px solid #000 !important;
                                 border-collapse: collapse !important;
                                 width: 100% !important;
                                 margin-bottom: 20px !important;
+                                table-layout: auto !important;
+                                page-break-inside: avoid !important; /* Ensure table doesn't split */
+                                font-size: 0.85rem !important; /* Slightly smaller font */
                             }
                             .page table td, .page table th {
-                                border: 1px solid black !important;
-                                padding: 8px !important;
+                                border: 1px solid #000 !important;
+                                padding: 6px 8px !important; /* Compact padding */
+                                vertical-align: top !important;
+                                word-wrap: break-word !important;
                             }
                             .page table th {
-                                background-color: #f2f2f2 !important;
+                                background-color: #f8f9fa !important;
                                 font-weight: bold !important;
+                                text-transform: uppercase !important;
+                                font-size: 0.75rem !important;
+                                border-bottom: 2px solid #000 !important;
+                            }
+                            /* Force images in criteria to stay within bounds */
+                            .page img {
+                                max-width: 100% !important;
+                                height: auto !important;
                             }
                         </style>
-                        <div class="text-center mb-5">
-                            <h2 class="fw-bold">Olympiad Evaluation Criteria</h2>
-                            <hr/>
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold text-uppercase" style="letter-spacing: 1px;">Olympiad Evaluation Criteria</h2>
+                            <hr />
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-12">
-                                <h3 class="text-primary"><span t-field="o.name"/> (<span t-field="o.code"/>)</h3>
+                            <div class="col-12 border-bottom pb-2">
+                                <h3 class="fw-bold" style="color: #0056b3;">
+                                    <span t-field="o.name"/> 
+                                    <small class="text-muted" style="font-size: 0.6em;">[<span t-field="o.code"/>]</small>
+                                </h3>
                             </div>
                         </div>
 
-                        <div class="mt-4">
-                            <h4 class="border-bottom pb-2">Criteria Details</h4>
-                            <div class="prose mt-3" t-field="o.criteria"/>
+                        <div class="mt-2 criteria-content">
+                            <div class="prose" t-field="o.criteria"/>
                         </div>
                     </div>
                 </t>
