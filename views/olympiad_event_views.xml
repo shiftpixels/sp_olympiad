@@ -19,6 +19,8 @@
                     <group>
                         <group>
                             <field name="code_prefix"/>
+                            <field name="min_jury_per_project"/>
+                            <field name="best_stand_max_score"/>
                         </group>
                         <group>
                             <field name="dates" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': True}"/>
@@ -26,18 +28,6 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Pricing" name="pricing">
-                            <group>
-                                <group>
-                                    <field name="currency_id"/>
-                                </group>
-                                <group>
-                                    <field name="registration_fee"/>
-                                    <field name="accommodation_fee"/>
-                                    <field name="excursion_fee"/>
-                                </group>
-                            </group>
-                        </page>
                         <page string="Categories" name="categories">
                             <div class="alert alert-info" role="alert">
                                 <i class="fa fa-info-circle me-1"/>
@@ -49,6 +39,26 @@
                                         string="Configuration / Categories"/>.
                             </div>
                             <field name="category_ids" widget="many2many_checkboxes"/>
+                        </page>
+                        <page string="Age Boundaries" name="age_boundaries">
+                            <group>
+                                <group string="Junior Group">
+                                    <field name="age_junior_min"/>
+                                    <field name="age_junior_max"/>
+                                </group>
+                                <group string="Senior Group">
+                                    <field name="age_senior_min"/>
+                                    <field name="age_senior_max"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Medal Thresholds" name="medal_thresholds">
+                            <group col="1">
+                                <field name="medal_gold_min"/>
+                                <field name="medal_silver_min"/>
+                                <field name="medal_bronze_min"/>
+                                <field name="medal_hm_min"/>
+                            </group>
                         </page>
                         <page string="Accommodation Dates" name="accommodation_dates">
                             <field name="accommodation_ids" context="{'default_date': dates}" options="{'no_open': True}">
@@ -78,6 +88,18 @@
                                     </group>
                                 </form>
                             </field>
+                        </page>
+                        <page string="Pricing" name="pricing">
+                            <group>
+                                <group>
+                                    <field name="currency_id"/>
+                                </group>
+                                <group>
+                                    <field name="registration_fee"/>
+                                    <field name="accommodation_fee"/>
+                                    <field name="excursion_fee"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
