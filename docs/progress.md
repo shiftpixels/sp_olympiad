@@ -10,7 +10,7 @@ The module currently covers:
 - Event accommodation date planning
 - Website category pages
 - Category criteria PDF export
-- Basic Olympiad system setting
+- Olympiad general settings
 
 The module does **not** yet include mentor registration, project submission flow, jury scoring workflow, payments, or final admin panel workflows.
 
@@ -59,11 +59,18 @@ Main capabilities:
 - Create and manage categories with:
   - Name
   - Unique code
+  - Max participants
   - Sort order (`sequence`)
   - Active/passive state
   - Image
   - Web description (HTML)
   - Evaluation criteria (HTML)
+- Solo behavior is derived automatically (`is_solo = True` when `max_participants = 1`).
+- Participant count is validated with:
+  - Minimum: `1`
+  - Maximum: controlled by system setting (**Category Max Participants Limit**).
+- If a user enters a number above the configured maximum, the value is automatically reduced to the allowed limit before save.
+- Field help text dynamically shows the currently configured system limit.
 
 Views:
 - Kanban view
@@ -76,6 +83,9 @@ Model extension: `res.config.settings`
 Main capability:
 - Configure a global competition name:
   - `Competition Name` (`olympiad_name`)
+- Configure category participant upper bound:
+  - `Category Max Participants Limit` (`category_max_participants_limit`)
+  - Used by category validation logic and UI help text.
 
 Location:
 - Olympiad > Configuration > General Settings
