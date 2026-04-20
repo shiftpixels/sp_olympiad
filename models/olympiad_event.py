@@ -15,8 +15,8 @@ class OlympiadEvent(models.Model):
         tracking=True,
         help="The prefix used to generate unique codes for projects in this event (e.g. OLY-)."
     )
-    dates = fields.Date(string='Dates', tracking=True)
-    date_end = fields.Date(string='End Date', tracking=True)
+    dates = fields.Date(string='Dates', required=True, tracking=True)
+    date_end = fields.Date(string='End Date', required=True, tracking=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('open', 'Active'),
@@ -47,5 +47,4 @@ class OlympiadEvent(models.Model):
             if record.state == 'finished':
                 if not record.date_end or record.date_end > fields.Date.today():
                     raise ValidationError("You cannot set the event to 'Finished' before its End Date has passed.")
-
 

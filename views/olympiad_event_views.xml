@@ -21,7 +21,7 @@
                             <field name="code_prefix"/>
                         </group>
                         <group>
-                            <field name="dates" widget="daterange" options="{'end_date_field': 'date_end'}"/>
+                            <field name="dates" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': True}"/>
                             <field name="date_end" invisible="1"/>
                         </group>
                     </group>
@@ -53,7 +53,7 @@
             <list string="Events" editable="bottom">
                 <field name="name"/>
                 <field name="code_prefix"/>
-                <field name="dates" widget="daterange" options="{'end_date_field': 'date_end'}" string="Dates"/>
+                <field name="dates" widget="daterange" options="{'end_date_field': 'date_end', 'always_range': True}" string="Dates"/>
                 <field name="date_end" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-success="state == 'open'" decoration-danger="state == 'cancelled'" decoration-info="state == 'draft'"/>
             </list>

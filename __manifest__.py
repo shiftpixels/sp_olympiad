@@ -5,9 +5,9 @@
     'summary': 'Core module for Olympiad Management Suite',
     'description': """
 Olympiad Core
-============
+=============
 Core module providing the foundation for the Olympiad Management Suite.
-    """,
+""",
     'author': "ShiftPixels",
     'license': 'LGPL-3',
     'depends': [
