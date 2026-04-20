@@ -68,7 +68,7 @@ class OlympiadEvent(models.Model):
     medal_gold_min = fields.Integer(string='Gold Min', default=91, required=True)
     medal_silver_min = fields.Integer(string='Silver Min', default=81, required=True)
     medal_bronze_min = fields.Integer(string='Bronze Min', default=65, required=True)
-    medal_hm_min = fields.Integer(string='Honorable Mention Min', default=50, required=True)
+    medal_hm_min = fields.Integer(string='Honorable Min', default=50, required=True)
     age_junior_min = fields.Integer(string='Junior Min Age', default=12, required=True)
     age_junior_max = fields.Integer(string='Junior Max Age', default=14, required=True)
     age_senior_min = fields.Integer(string='Senior Min Age', default=15, required=True)
