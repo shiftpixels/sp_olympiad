@@ -13,7 +13,16 @@ class MentorSignupController(http.Controller):
         """Render the mentor signup form."""
         # Redirect already logged in users to dashboard
         if request.env.user != request.env.ref('base.public_user'):
-            return request.redirect('/web')
+            # If user is admin or already a mentor, redirect to dashboard
+            if request.env.user.has_group('base.group_system') or request.env.user.has_group('sp_olympiad.group_sp_olympiad_mentor'):
+                return request.redirect('/my/olympiad')
+            # For regular logged in users, show mentor signup
+            countries = request.env['res.country'].sudo().search([])
+            return request.render('sp_olympiad.mentor_signup_page', {
+                'countries': countries,
+                'success': kwargs.get('success'),
+                'error': kwargs.get('error'),
+            })
 
         countries = request.env['res.country'].sudo().search([])
         return request.render('sp_olympiad.mentor_signup_page', {

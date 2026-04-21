@@ -16,3 +16,8 @@ class OlympiadWebsite(http.Controller):
         return request.render("sp_olympiad.category_detail_page", {
             'category': category,
         })
+
+    @http.route(['/my/olympiad'], type='http', auth="user", website=True)
+    def my_olympiad(self, **post):
+        """Dashboard for logged in users (mentors/admins)."""
+        return request.render("sp_olympiad.my_olympiad_dashboard", {})
