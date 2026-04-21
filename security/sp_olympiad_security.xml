@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Security category for Olympiad modules -->
+    <record id="sp_olympiad_security_category" model="ir.module.category">
+        <field name="name">Olympiad</field>
+        <field name="description">Olympiad Management Access Rights</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Privilege record (Odoo 19+) -->
+    <record id="privilege_sp_olympiad" model="res.groups.privilege">
+        <field name="name">Olympiad Privilege</field>
+        <field name="category_id" ref="sp_olympiad_security_category"/>
+    </record>
+
+    <!-- Group: Olympiad Admin - Full Access -->
+    <record id="group_sp_olympiad_admin" model="res.groups">
+        <field name="name">Olympiad Admin</field>
+        <field name="privilege_id" ref="privilege_sp_olympiad"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Full access to all Olympiad features and settings.</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Group: Olympiad Staff - Operational Access (no settings) -->
+    <record id="group_sp_olympiad_staff" model="res.groups">
+        <field name="name">Olympiad Staff</field>
+        <field name="privilege_id" ref="privilege_sp_olympiad"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Operational access to Olympiad events and projects, but no system settings.</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Group: Olympiad Mentor - Own Projects Only -->
+    <record id="group_sp_olympiad_mentor" model="res.groups">
+        <field name="name">Olympiad Mentor</field>
+        <field name="privilege_id" ref="privilege_sp_olympiad"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Access to create and manage own projects and students only.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Group: Olympiad Jury - Assigned Projects and Scoring -->
+    <record id="group_sp_olympiad_jury" model="res.groups">
+        <field name="name">Olympiad Jury</field>
+        <field name="privilege_id" ref="privilege_sp_olympiad"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Access to view assigned projects and submit scores only.</field>
+        <field name="sequence">40</field>
+    </record>
+
+</odoo>

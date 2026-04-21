@@ -16,6 +16,7 @@ Core module providing the foundation for the Olympiad Management Suite.
         'website',
     ],
     'data': [
+        'security/sp_olympiad_security.xml',
         'security/ir.model.access.csv',
         'views/olympiad_category_views.xml',
         'views/olympiad_event_views.xml',

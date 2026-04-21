@@ -12,21 +12,38 @@
               action="action_olympiad_event" 
               sequence="10"/>
 
-    <!-- Configuration Menu -->
+    <!-- Root Menu - visible to all logged-in users -->
+    <menuitem id="menu_olympiad_root"
+              name="Olympiad"
+              sequence="10"
+              groups="group_sp_olympiad_admin,group_sp_olympiad_staff,group_sp_olympiad_mentor,group_sp_olympiad_jury"/>
+
+    <!-- Events Menu - visible to Admin, Staff, Mentor, Jury -->
+    <menuitem id="menu_olympiad_events"
+              name="Events"
+              parent="menu_olympiad_root"
+              action="action_olympiad_event"
+              sequence="10"
+              groups="group_sp_olympiad_admin,group_sp_olympiad_staff,group_sp_olympiad_mentor,group_sp_olympiad_jury"/>
+
+    <!-- Configuration Menu - visible to Admin, Staff only -->
     <menuitem id="menu_olympiad_config"
               name="Configuration"
               parent="menu_olympiad_root"
-              sequence="100"/>
+              sequence="100"
+              groups="group_sp_olympiad_admin,group_sp_olympiad_staff"/>
 
     <menuitem id="menu_olympiad_category"
               name="Categories"
               parent="menu_olympiad_config"
               action="action_olympiad_category"
-              sequence="10"/>
+              sequence="10"
+              groups="group_sp_olympiad_admin,group_sp_olympiad_staff"/>
 
     <menuitem id="menu_olympiad_settings"
               name="General Settings"
               parent="menu_olympiad_config"
               action="action_sp_olympiad_config_settings"
-              sequence="20"/>
+              sequence="20"
+              groups="group_sp_olympiad_admin"/>
 </odoo>
