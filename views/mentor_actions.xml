@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Mentor Action -->
+    <record id="action_sp_olympiad_mentor_list" model="ir.actions.act_window">
+        <field name="name">Mentors</field>
+        <field name="res_model">sp_olympiad.mentor</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

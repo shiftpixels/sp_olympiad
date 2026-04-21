@@ -14,17 +14,25 @@
         <record id="view_res_config_settings_form_inherit" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.sp_olympiad</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="90"/>
+            <field name="priority" eval="100"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <app data-string="Olympiad" string="Olympiad" name="sp_olympiad" groups="base.group_system">
                         <block title="General Settings" name="olympiad_general_settings">
-                            <setting string="Competition Name" help="Set the official name of the competition.">
+                            <setting string="Competition Name" help="Set the official name of the competition." config_parameter="sp_olympiad.olympiad_name">
                                 <field name="olympiad_name" placeholder="e.g. International Biology Olympiad"/>
                             </setting>
-                            <setting string="Category Max Participants Limit" help="Upper limit used to validate category Max Participants.">
+                            <setting string="Category Max Participants Limit" help="Upper limit used to validate category Max Participants." config_parameter="sp_olympiad.category_max_participants_limit">
                                 <field name="category_max_participants_limit"/>
+                            </setting>
+                        </block>
+                        <block title="Mentor Signup" name="olympiad_mentor_signup">
+                            <setting string="Enable Mentor Signup" help="Allow external users to register as mentors via the mentor signup form." config_parameter="sp_olympiad.mentor_signup_enabled">
+                                <field name="mentor_signup_enabled" string="Enable Mentor Signup"/>
+                            </setting>
+                            <setting string="Require Email Verification" help="Require mentors to verify their email before account becomes active." config_parameter="sp_olympiad.mentor_verification_enabled">
+                                <field name="mentor_verification_enabled" string="Require Email Verification"/>
                             </setting>
                         </block>
                     </app>

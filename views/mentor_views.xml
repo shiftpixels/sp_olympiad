@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Mentor ACL -->
+    <record id="access_sp_olympiad_mentor_user" model="ir.model.access">
+        <field name="name">sp_olympiad.mentor.user</field>
+        <field name="model_id" ref="model_sp_olympiad_mentor"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_sp_olympiad_mentor_manager" model="ir.model.access">
+        <field name="name">sp_olympiad.mentor.manager</field>
+        <field name="model_id" ref="model_sp_olympiad_mentor"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_admin"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!-- Mentor Views -->
+    <record id="view_sp_olympiad_mentor_form" model="ir.ui.view">
+        <field name="name">sp_olympiad.mentor.form</field>
+        <field name="model">sp_olympiad.mentor</field>
+        <field name="arch" type="xml">
+            <form string="Mentor">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="user_id"/>
+                            <field name="verified"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="country_id"/>
+                            <field name="branch"/>
+                            <field name="phone"/>
+                        </group>
+                    </group>
+                    <group string="Verification">
+                        <field name="verification_token" readonly="1"/>
+                        <field name="token_expiry" readonly="1"/>
+                    </group>
+                    <group string="Dates">
+                        <field name="created_date" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sp_olympiad_mentor_list" model="ir.ui.view">
+        <field name="name">sp_olympiad.mentor.list</field>
+        <field name="model">sp_olympiad.mentor</field>
+        <field name="arch" type="xml">
+            <list string="Mentors">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="country_id"/>
+                <field name="branch"/>
+                <field name="verified"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sp_olympiad_mentor_search" model="ir.ui.view">
+        <field name="name">sp_olympiad.mentor.search</field>
+        <field name="model">sp_olympiad.mentor</field>
+        <field name="arch" type="xml">
+            <search string="Mentors">
+                <field name="name" string="Mentor"/>
+                <field name="email" string="Email"/>
+                <field name="branch" string="Branch"/>
+                <field name="country_id" string="Country"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Mentor Action -->
+    <record id="action_sp_olympiad_mentor_list" model="ir.actions.act_window">
+        <field name="name">Mentors</field>
+        <field name="res_model">sp_olympiad.mentor</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_sp_olympiad_mentor_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_sp_olympiad_mentor_form')}),
+        ]"/>
+        <field name="search_view_id" ref="view_sp_olympiad_mentor_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_no_content_create">
+                Click to add a mentor.
+            </p>
+        </field>
+    </record>
+
+</odoo>

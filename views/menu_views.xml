@@ -46,4 +46,11 @@
               action="action_sp_olympiad_config_settings"
               sequence="20"
               groups="group_sp_olympiad_admin"/>
+
+    <menuitem id="menu_olympiad_mentors"
+              name="Mentors"
+              parent="menu_olympiad_config"
+              action="action_sp_olympiad_mentor_list"
+              sequence="30"
+              groups="group_sp_olympiad_admin"/>
 </odoo>
