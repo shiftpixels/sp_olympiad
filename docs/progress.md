@@ -138,3 +138,35 @@ When this document is expanded into a full user guide, recommended sections are:
 4. Website content publishing flow
 5. PDF criteria generation and usage
 6. Role-based operations (admin vs internal users)
+
+## Change Log
+
+### 2026-04-21 - Split-Ready Architecture Planning (No Functional Change)
+
+- Summary:
+  - Added a technical boundary plan for future addon extraction while keeping all current development in `sp_olympiad`.
+- Files:
+  - `addons_dev/sp_olympiad/docs/split_ready_plan.md`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Preserve current module stability and velocity.
+  - Keep payment/certification code extractable for future commercial packaging.
+- Verification:
+  - Documentation-only update; no model/view/security/runtime behavior changed.
+
+### 2026-04-21 - Imported Planning Notes Into Module Docs (No Functional Change)
+
+- Summary:
+  - Copied planning notes from `.claude/odoo_addons/sp_olympiad` into module docs for centralized tracking.
+  - Added a planning README to mark these as backlog references, not auto-applied work.
+- Files:
+  - `addons_dev/sp_olympiad/docs/planning/task.md`
+  - `addons_dev/sp_olympiad/docs/planning/implementation_plan.md`
+  - `addons_dev/sp_olympiad/docs/planning/data_models.md`
+  - `addons_dev/sp_olympiad/docs/planning/README.md`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Keep planning context inside the module repository.
+  - Support step-by-step execution without applying full scope at once.
+- Verification:
+  - Documentation-only update; no module code, views, security, or runtime logic changed.
