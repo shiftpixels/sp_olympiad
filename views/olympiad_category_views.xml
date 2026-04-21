@@ -61,7 +61,7 @@
         <field name="name">sp_olympiad.category.form</field>
         <field name="model">sp_olympiad.category</field>
         <field name="arch" type="xml">
-            <form string="Category">
+            <form string="Category" delete="0">
                 <sheet>
                     <div class="d-flex align-items-start mb-4">
                         <field name="image" widget="image" class="m-0 me-4" style="width: 250px; height: 250px; object-fit: cover;" options="{'preview_image': 'image'}"/>
@@ -77,7 +77,9 @@
                                     <field name="sequence"/>
                                 </group>
                                 <group>
-                                    <field name="active" widget="boolean_toggle"/>
+                                    <field name="active"
+                                           widget="boolean_toggle"
+                                           help="False means archived/passive. Archived categories stay in records but are not published on website pages."/>
                                 </group>
                             </group>
                         </div>
@@ -99,10 +101,12 @@
         <field name="name">Categories</field>
         <field name="res_model">sp_olympiad.category</field>
         <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'active_test': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new Olympiad Category
             </p>
         </field>
     </record>
+
 </odoo>

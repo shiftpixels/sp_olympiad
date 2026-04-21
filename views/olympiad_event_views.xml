@@ -73,7 +73,7 @@
                                                     <field name="label"/>
                                                 </div>
                                                 <div class="text-muted">
-                                                    <i class="fa fa-calendar me-1"/>
+                                                    <i class="fa fa-calendar me-1" title="Calendar"/>
                                                     <field name="date"/>
                                                 </div>
                                             </div>

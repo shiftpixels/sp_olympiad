@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 class OlympiadCategory(models.Model):
@@ -26,10 +26,6 @@ class OlympiadCategory(models.Model):
     description = fields.Html(string='Web Description', translate=True)
     criteria = fields.Html(string='Evaluation Criteria', translate=True)
     active = fields.Boolean(default=True)
-
-    _sql_constraints = [
-        ('code_unique', 'unique(code)', 'Category code must be unique!')
-    ]
 
     @api.depends('max_participants')
     def _compute_is_solo(self):
@@ -78,3 +74,32 @@ class OlympiadCategory(models.Model):
                     f'Max Participants cannot be greater than {max_allowed}. '
                     'You can change this value in Olympiad General Settings.'
                 )
+
+    @api.constrains('code')
+    def _check_unique_code(self):
+        for record in self:
+            if not record.code:
+                continue
+            duplicate = self.search(
+                [('code', '=', record.code), ('id', '!=', record.id)],
+                limit=1,
+            )
+            if duplicate:
+                raise ValidationError('Category code must be unique!')
+
+    def unlink(self):
+        event_model = self.env['sp_olympiad.event'].sudo().with_context(active_test=False)
+        for record in self:
+            linked_event = event_model.search([('category_ids', 'in', record.id)], limit=1)
+            if linked_event:
+                raise ValidationError(
+                    _(
+                        "You cannot delete category '%(category)s' because it is used in event "
+                        "'%(event)s'. Archive it instead."
+                    )
+                    % {
+                        'category': record.display_name,
+                        'event': linked_event.display_name,
+                    }
+                )
+        return super().unlink()

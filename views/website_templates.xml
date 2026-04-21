@@ -42,7 +42,7 @@
                                                 </a>
                                             </h5>
                                             <div class="text-primary small fw-bold mb-0">
-                                                <t t-esc="category.code"/>
+                                                <t t-out="category.code"/>
                                             </div>
                                         </div>
                                     </div>
@@ -87,7 +87,7 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-10">
                                 <div class="text-center mb-5">
-                                    <span class="badge text-bg-primary mb-2 px-3 py-2 rounded-pill">Category Code: <t t-esc="category.code"/></span>
+                                    <span class="badge text-bg-primary mb-2 px-3 py-2 rounded-pill">Category Code: <t t-out="category.code"/></span>
                                     <h1 class="display-3 fw-bold mb-4" t-field="category.name"/>
                                     <hr class="w-25 mx-auto border-primary border-2 opacity-50"/>
                                 </div>
@@ -111,7 +111,7 @@
                                         <div class="p-3">
                                             <div class="d-flex justify-content-between align-items-center mb-4">
                                                 <h4 class="text-primary fw-bold mb-0"><i class="fa fa-check-circle me-2"></i>What we evaluate:</h4>
-                                                <a t-attf-href="/report/pdf/sp_olympiad_core.action_report_category_criteria/#{category.id}" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm transition-base">
+                                                <a t-attf-href="/report/pdf/sp_olympiad.action_report_category_criteria/#{category.id}" class="btn btn-outline-danger btn-sm rounded-pill shadow-sm transition-base">
                                                     <i class="fa fa-file-pdf-o me-1"></i> Download as PDF
                                                 </a>
                                             </div>

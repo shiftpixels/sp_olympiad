@@ -7,7 +7,7 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">current</field>
-            <field name="context">{"module": "sp_olympiad_core"}</field>
+            <field name="context">{"module": "sp_olympiad"}</field>
         </record>
 
         <!-- Settings View Inheritance -->
@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
-                    <app data-string="Olympiad" string="Olympiad" name="sp_olympiad_core" groups="base.group_system">
+                    <app data-string="Olympiad" string="Olympiad" name="sp_olympiad" groups="base.group_system">
                         <block title="General Settings" name="olympiad_general_settings">
                             <setting string="Competition Name" help="Set the official name of the competition.">
                                 <field name="olympiad_name" placeholder="e.g. International Biology Olympiad"/>

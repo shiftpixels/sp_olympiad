@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
 
     olympiad_name = fields.Char(
         string="Competition Name",
-        config_parameter='sp_olympiad_core.olympiad_name',
+        config_parameter='sp_olympiad.olympiad_name',
         help="Global name for the Olympiad competition."
     )
     category_max_participants_limit = fields.Integer(

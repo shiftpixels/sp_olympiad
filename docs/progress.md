@@ -170,3 +170,213 @@ When this document is expanded into a full user guide, recommended sections are:
   - Support step-by-step execution without applying full scope at once.
 - Verification:
   - Documentation-only update; no module code, views, security, or runtime logic changed.
+
+### 2026-04-21 - Removed Legacy `sp_olympiad_core` Runtime References
+
+- Summary:
+  - Removed old `sp_olympiad_core` external ID/module references from runtime code and views.
+  - Standardized active module references to `sp_olympiad` since no backward compatibility is required before first release.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/main.py`
+  - `addons_dev/sp_olympiad/views/olympiad_category_reports.xml`
+  - `addons_dev/sp_olympiad/views/website_templates.xml`
+  - `addons_dev/sp_olympiad/views/res_config_settings_views.xml`
+  - `addons_dev/sp_olympiad/models/res_config_settings.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Prevent runtime template/report/action resolution errors caused by stale legacy module prefixes.
+  - Keep module identity consistent across controller, report, website, and settings layers.
+- Verification:
+  - `rg -n "sp_olympiad_core" addons_dev/sp_olympiad` now returns matches only in planning docs under `docs/planning/`.
+  - `python3 -m compileall -q addons_dev/sp_olympiad` completed without errors.
+
+### 2026-04-21 - Removed `_sql_constraints` and `t-esc` Usage
+
+- Summary:
+  - Replaced category SQL constraint declaration with Python constraint validation.
+  - Replaced website template `t-esc` usages with `t-out`.
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+  - `addons_dev/sp_olympiad/views/website_templates.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Align implementation with adopted Odoo 19 coding rules in this project (`_sql_constraints` and `t-esc` are avoided).
+- Verification:
+  - `rg -n "_sql_constraints|t-esc" addons_dev/sp_olympiad` now returns matches only in planning docs under `docs/planning/`.
+  - `python3 -m compileall -q addons_dev/sp_olympiad` completed without errors.
+
+### 2026-04-21 - Evaluation Criteria PDF Set Back To Portrait
+
+- Summary:
+  - Changed Evaluation Criteria report paper format orientation from landscape to portrait.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_reports.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Restore previous vertical PDF layout expected in user flow.
+- Verification:
+  - Ran module upgrade: `docker compose exec odoo19 odoo -d odoo_19 -u sp_olympiad --stop-after-init --db_host=db --db_user=odoo --db_password='odoo19@2025'`
+  - Upgrade completed successfully.
+
+### 2026-04-21 - Removed Company Header From Evaluation Criteria PDF
+
+- Summary:
+  - Removed default company header block (`My Company`, address) from the Evaluation Criteria PDF template.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_reports.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Keep the criteria document clean and content-focused without default external report header data.
+- Verification:
+  - Template layout call switched from `web.external_layout` to `web.basic_layout`.
+  - Module upgrade should be run manually after this change.
+
+### 2026-04-21 - Improved Word Table Fit for Evaluation Criteria PDF
+
+- Summary:
+  - Updated report CSS so Word-pasted tables fit page width more reliably and preserve consistent multi-page behavior.
+  - Added header-row repeat support across PDF page breaks.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_reports.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Prevent overflow and inconsistent rendering when category criteria content includes rich tables from Word.
+- Verification:
+  - CSS now enforces `width/max-width: 100%`, `table-layout: fixed`, `thead` as `table-header-group`, and stronger cell wrapping rules.
+  - Module upgrade should be run manually after this change.
+
+### 2026-04-21 - Category Visibility and Deletion Guard
+
+- Summary:
+  - Confirmed website categories page publishes only active categories.
+  - Added deletion guard to block removing categories that are already linked to any event.
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+  - `addons_dev/sp_olympiad/controllers/main.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Keep public website aligned with active/passive category toggle.
+  - Prevent data integrity issues by disallowing deletion of categories referenced by events.
+- Verification:
+  - Controller uses active-only domain: `[('active', '=', True)]` for `/olympiad/categories`.
+  - Added `@api.ondelete(at_uninstall=False)` guard with linked-event check.
+  - `python3 -m compileall -q addons_dev/sp_olympiad/models/olympiad_category.py` completed without errors.
+
+### 2026-04-21 - Strengthened Category Deletion Guard For Event Links
+
+- Summary:
+  - Replaced previous delete guard implementation with a strict `unlink()` pre-check.
+  - Category deletion is now blocked if the category is linked to any event (including inactive context).
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - User validation showed category deletion was still possible despite event linkage.
+  - `unlink()` pre-check ensures guard executes before deletion completes.
+- Verification:
+  - `python3 -m compileall -q addons_dev/sp_olympiad/models/olympiad_category.py` completed without errors.
+
+### 2026-04-21 - UI-Level Delete Disable For Event-Linked Categories
+
+- Summary:
+  - Disabled default category delete action from the form and access rights.
+  - Added a conditional custom delete button that appears only when category is not linked to any event.
+  - Added warning message in form when category is event-linked.
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/security/ir.model.access.csv`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Prevent users from reaching destructive delete confirmation for categories already used in events.
+  - Align UI behavior with business rule: linked categories are archive-only.
+- Verification:
+  - Category ACL unlink permission set to `0` for internal users.
+  - Form has `delete="0"` and conditional object button `action_delete_if_unused`.
+  - `python3 -m compileall -q addons_dev/sp_olympiad/models/olympiad_category.py` completed without errors.
+
+### 2026-04-21 - Easier Access To Archived Categories
+
+- Summary:
+  - Added a dedicated backend menu entry for archived categories.
+  - Added a dedicated action that opens categories with `active=False` directly.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/views/menu_views.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Improve discoverability for general users who may not use advanced filter/search controls.
+- Verification:
+  - New action `action_olympiad_category_archived` uses domain `[('active', '=', False)]` with `active_test=False`.
+  - New menu `Olympiad > Configuration > Archived Categories` points to this action.
+
+### 2026-04-21 - Show Active And Passive Categories In Main List
+
+- Summary:
+  - Updated main Categories action to show both active and passive records by default.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - In this project, archived categories are effectively passive categories and should be visible directly in the main list.
+- Verification:
+  - Main action `action_olympiad_category` now uses context `{'active_test': False}`.
+
+### 2026-04-21 - Removed Separate Archived Categories Menu
+
+- Summary:
+  - Removed dedicated `Archived Categories` menu and its standalone action.
+  - Kept unified category management in the main `Categories` screen.
+- Files:
+  - `addons_dev/sp_olympiad/views/menu_views.xml`
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Separate archived menu is unnecessary once main category list already shows both active and passive records.
+- Verification:
+  - `menu_olympiad_category_archived` removed.
+  - `action_olympiad_category_archived` removed.
+
+### 2026-04-21 - Hotfix For Category Form OwlError
+
+- Summary:
+  - Removed dynamic view conditions that referenced `is_used_in_event` on category form to stop Owl parse crash.
+  - Kept server-side delete protection (`action_delete_if_unused` + `unlink` guard).
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Category form was crashing with `field is undefined` in Owl lifecycle, blocking access to category records.
+- Verification:
+  - View no longer uses `is_used_in_event` in `invisible` expressions.
+  - Delete restriction remains enforced server-side for event-linked categories.
+
+### 2026-04-21 - Removed Category Form Delete Button For Consistent UX
+
+- Summary:
+  - Removed custom `Delete` button from category form.
+  - Removed now-unused helper field/method related to conditional delete button visibility.
+  - Kept server-side deletion block via `unlink()` for event-linked categories.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Avoid contradictory UX where warning says “cannot be deleted” but a delete button is still shown.
+- Verification:
+  - No `action_delete_if_unused` or `is_used_in_event` usage remains in model/view.
+  - `python3 -m compileall -q addons_dev/sp_olympiad/models/olympiad_category.py` completed without errors.
+
+### 2026-04-21 - Replaced Category Warning Banner With Field Help
+
+- Summary:
+  - Removed always-visible warning banner from category form.
+  - Added contextual help text directly on the `active` toggle field.
+- Files:
+  - `addons_dev/sp_olympiad/views/olympiad_category_views.xml`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Keep UI cleaner while still explaining that `active=False` means archived/passive behavior.
+- Verification:
+  - Warning banner removed from form.
+  - Help text is attached to `active` field in form view.
