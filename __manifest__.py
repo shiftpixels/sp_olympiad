@@ -24,6 +24,7 @@ Core module providing the foundation for the Olympiad Management Suite.
         'views/res_config_settings_views.xml',
         'views/mentor_actions.xml',
         'views/mentor_views.xml',
+        'views/mentor_email_template.xml',
         'views/website_templates.xml',
         'views/menu_views.xml',
     ],

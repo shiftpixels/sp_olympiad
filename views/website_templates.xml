@@ -150,8 +150,8 @@
                                         <!-- Success Message -->
                                         <t t-if="success">
                                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                                <strong>Success!</strong> Your registration has been submitted.
-                                                Please check your email to verify your account.
+                                                <strong>Success!</strong>
+                                                <span t-out="success_message or 'Your registration has been submitted. Please check your email to verify your account.'"/>
                                                 <button t-attf-type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>
                                         </t>
@@ -196,7 +196,7 @@
                                                     <option value="">Select your country</option>
                                                     <t t-foreach="countries" t-as="country">
                                                         <option t-attf-value="{{country.id}}"
-                                                                t-att-selected="(form_data.country_id == country.id) if form_data else ''">
+                                                                t-att-selected="form_data and form_data.get('country_id') == country.id and 'selected' or None">
                                                             <span t-field="country.name"/>
                                                         </option>
                                                     </t>

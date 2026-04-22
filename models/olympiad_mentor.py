@@ -144,7 +144,21 @@ class OlympiadMentor(models.Model):
         if self.verification_token_expired():
             return False
 
-        self.verified = True
+        values = {
+            'verified': True,
+            'verification_token': False,
+            'token_expiry': False,
+        }
+        self.write(values)
+
+        # Activate linked user and grant mentor role only after email verification.
+        if self.user_id:
+            user_values = {'active': True}
+            mentor_group = self.env.ref('sp_olympiad.group_sp_olympiad_mentor', raise_if_not_found=False)
+            if mentor_group and mentor_group not in self.user_id.groups_id:
+                user_values['groups_id'] = [(4, mentor_group.id)]
+            self.user_id.sudo().write(user_values)
+
         return True
 
     def action_resend_verification_email(self):

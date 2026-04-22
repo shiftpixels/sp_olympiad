@@ -141,6 +141,48 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Change Log
 
+### 2026-04-21 - Block Mentor Login Until Email Verification
+
+- Summary:
+  - Updated mentor signup flow so users created with email verification enabled stay inactive until they verify.
+  - Updated mentor verification logic to activate the linked user and grant mentor group only after successful token verification.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Prevent mentors from logging in before email ownership is confirmed.
+- Verification:
+  - `PYTHONPYCACHEPREFIX=/tmp/pycache python3 -m compileall -q addons_dev/sp_olympiad`
+  - `docker compose exec odoo19 bash -lc "odoo -d odoo_19 -u sp_olympiad --stop-after-init --db_host=db --db_user=odoo --db_password='odoo19@2025'"`
+  - `docker compose exec odoo19 bash -lc "odoo shell -d odoo_19 --db_host=db --db_user=odoo --db_password='odoo19@2025' <<'PY' ... deactivate unverified mentor users ... PY"` (result: `deactivated_users=1`)
+
+### 2026-04-21 - Mentor Signup Hardening and Runtime Fixes
+
+- Summary:
+  - Hardened mentor signup endpoints with CSRF protection and savepoint rollback to prevent partial account creation.
+  - Applied mentor signup and verification settings in controller flow.
+  - Restored missing website dashboard route registration by importing `controllers/main.py`.
+  - Added missing mentor verification email template and wired it into module data.
+  - Fixed country re-selection behavior after form validation errors.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/controllers/__init__.py`
+  - `addons_dev/sp_olympiad/views/website_templates.xml`
+  - `addons_dev/sp_olympiad/views/mentor_email_template.xml`
+  - `addons_dev/sp_olympiad/__manifest__.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Close security and reliability gaps in public mentor signup endpoints.
+  - Ensure settings in General Settings have real runtime effect.
+  - Prevent silent verification-email no-op caused by missing template data.
+- Verification:
+  - `PYTHONPYCACHEPREFIX=/tmp/pycache python3 -m compileall -q addons_dev/sp_olympiad`
+  - `docker compose exec odoo19 bash -lc "odoo -d odoo_19 -u sp_olympiad --stop-after-init --db_host=db --db_user=odoo --db_password='odoo19@2025'"`
+  - `rg -n "csrf=False|savepoint|mentor_signup_enabled|mentor_verification_enabled" addons_dev/sp_olympiad/controllers/mentor_signup.py -S`
+  - `rg -n "from \\. import main|from \\. import mentor_signup" addons_dev/sp_olympiad/controllers/__init__.py -S`
+  - `rg -n "mentor_verification_email_template|mentor_email_template.xml" addons_dev/sp_olympiad/__manifest__.py addons_dev/sp_olympiad/views/mentor_email_template.xml -S`
+
 ### 2026-04-21 - Split-Ready Architecture Planning (No Functional Change)
 
 - Summary:
