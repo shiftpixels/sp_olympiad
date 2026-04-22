@@ -14,6 +14,7 @@ Core module providing the foundation for the Olympiad Management Suite.
         'base',
         'mail',
         'website',
+        'auth_signup',
     ],
     'data': [
         'security/sp_olympiad_security.xml',

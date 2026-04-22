@@ -26,6 +26,12 @@ class OlympiadMentor(models.Model):
         readonly=True,
         help='Set to True after email verification.'
     )
+    user_active = fields.Boolean(
+        string='User Active',
+        related='user_id.active',
+        store=True,
+        help='Mirror of related user\'s active status'
+    )
     active = fields.Boolean(default=True)
 
     # System fields
@@ -153,11 +159,16 @@ class OlympiadMentor(models.Model):
 
         # Activate linked user and grant mentor role only after email verification.
         if self.user_id:
+            # Write all values in a single call to prevent Odoo from resetting active=False
             user_values = {'active': True}
             mentor_group = self.env.ref('sp_olympiad.group_sp_olympiad_mentor', raise_if_not_found=False)
-            if mentor_group and mentor_group not in self.user_id.groups_id:
-                user_values['groups_id'] = [(4, mentor_group.id)]
+            if mentor_group and mentor_group not in self.user_id.group_ids:
+                user_values['group_ids'] = [(4, mentor_group.id)]
+            # Force active=True in write to prevent Odoo from auto-enabling it on group change
             self.user_id.sudo().write(user_values)
+            # Extra safety: ensure active is True after write
+            if not self.user_id.active:
+                self.user_id.sudo().write({'active': True})
 
         return True
 

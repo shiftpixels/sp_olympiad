@@ -106,7 +106,7 @@ class MentorSignupController(http.Controller):
         try:
             with request.env.cr.savepoint():
                 mentor_group = request.env.ref('sp_olympiad.group_sp_olympiad_mentor', raise_if_not_found=False)
-                user = request.env['res.users'].sudo().create({
+                user = request.env['res.users'].sudo().with_context(no_reset_password=True).create({
                     'name': name,
                     'login': email,
                     'email': email,
@@ -114,8 +114,10 @@ class MentorSignupController(http.Controller):
                     'active': not verification_enabled,
                 })
 
-                if not verification_enabled and mentor_group and hasattr(user, 'groups_id'):
-                    user.write({'groups_id': [(4, mentor_group.id)]})
+                if not verification_enabled and mentor_group and hasattr(user, 'group_ids'):
+                    user.sudo().write({
+                        'group_ids': [(4, mentor_group.id)],
+                    })
 
                 mentor_values = {
                     'name': name,
@@ -134,7 +136,14 @@ class MentorSignupController(http.Controller):
                     mentor.generate_verification_token()
                     mentor.send_verification_email()
 
-            _logger.info('Mentor registered: %s (%s)', name, email)
+            _logger.info(
+                'Mentor registered: %s (%s) - active=%s, verified=%s',
+                name,
+                email,
+                user.active,
+                mentor.verified,
+            )
+
             if verification_enabled:
                 return request.redirect('/mentor/signup?success=1')
             return request.redirect('/mentor/signup?success=1&verified=1')

@@ -141,6 +141,26 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Change Log
 
+### 2026-04-22 - Mentor Signup Verification/Login Enforcement (Odoo 19)
+
+- Summary:
+  - Refactored mentor signup user creation to use `no_reset_password=True` so unverified users can be created with `active=False` without `auth_signup` archived-user side effects.
+  - Removed debug-only mentor user route from public controller.
+  - Aligned `res.users._check_credentials` override with Odoo 19 signature and switched to `AccessDenied` for standard authentication blocking.
+  - Replaced `groups_id` usages with Odoo 19-compatible `group_ids` in mentor signup/verification role assignment.
+  - Kept mentor login blocked until email verification is completed.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+  - `addons_dev/sp_olympiad/models/res_users.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Ensure mentors cannot log in before email verification and keep behavior compatible with Odoo 19 authentication flow.
+- Verification:
+  - `PYTHONPYCACHEPREFIX=/tmp/pycache python3 -m compileall -q addons_dev/sp_olympiad`
+  - `docker compose exec odoo19 bash -lc "odoo -d odoo_19 -u sp_olympiad --stop-after-init --db_host=db --db_user=odoo --db_password='odoo19@2025'"`
+  - `docker compose exec odoo19 bash -lc "odoo shell -d odoo_19 --db_host=db --db_user=odoo --db_password='odoo19@2025' <<'PY' ... create unverified mentor and assert authenticate raises AccessDenied ... PY"`
+
 ### 2026-04-21 - Block Mentor Login Until Email Verification
 
 - Summary:
