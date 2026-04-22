@@ -19,5 +19,16 @@ class OlympiadWebsite(http.Controller):
 
     @http.route(['/my/olympiad'], type='http', auth="user", website=True)
     def my_olympiad(self, **post):
-        """Dashboard for logged in users (mentors/admins)."""
+        """Dashboard for verified mentors and administrators."""
+        user = request.env.user
+        if user.has_group('base.group_system'):
+            return request.render("sp_olympiad.my_olympiad_dashboard", {})
+
+        mentor = request.env['sp_olympiad.mentor'].sudo().search(
+            [('user_id', '=', user.id)],
+            limit=1
+        )
+        if not mentor or not mentor.verified or not user.active:
+            return request.redirect('/web/login?redirect=/mentor/signup')
+
         return request.render("sp_olympiad.my_olympiad_dashboard", {})

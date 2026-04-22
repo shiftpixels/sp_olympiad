@@ -148,9 +148,11 @@ When this document is expanded into a full user guide, recommended sections are:
   - Removed debug-only mentor user route from public controller.
   - Aligned `res.users._check_credentials` override with Odoo 19 signature and switched to `AccessDenied` for standard authentication blocking.
   - Replaced `groups_id` usages with Odoo 19-compatible `group_ids` in mentor signup/verification role assignment.
+  - Restricted `/my/olympiad` dashboard route to verified mentors (or system admins) instead of any authenticated user.
   - Kept mentor login blocked until email verification is completed.
 - Files:
   - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/controllers/main.py`
   - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
   - `addons_dev/sp_olympiad/models/res_users.py`
   - `addons_dev/sp_olympiad/docs/progress.md`
@@ -160,6 +162,7 @@ When this document is expanded into a full user guide, recommended sections are:
   - `PYTHONPYCACHEPREFIX=/tmp/pycache python3 -m compileall -q addons_dev/sp_olympiad`
   - `docker compose exec odoo19 bash -lc "odoo -d odoo_19 -u sp_olympiad --stop-after-init --db_host=db --db_user=odoo --db_password='odoo19@2025'"`
   - `docker compose exec odoo19 bash -lc "odoo shell -d odoo_19 --db_host=db --db_user=odoo --db_password='odoo19@2025' <<'PY' ... create unverified mentor and assert authenticate raises AccessDenied ... PY"`
+  - `docker compose exec odoo19 bash -lc "odoo shell -d odoo_19 --db_host=db --db_user=odoo --db_password='odoo19@2025' <<'PY' ... deactivate existing unverified mentors with active users ... PY"` (result: `mentor_ids_to_fix=[2]`)
 
 ### 2026-04-21 - Block Mentor Login Until Email Verification
 
