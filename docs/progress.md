@@ -141,6 +141,28 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Change Log
 
+### 2026-04-22 - Mentor Auth Anti-Enumeration and Login Message Hardening
+
+- Summary:
+  - Added a `/web/login` controller override to replace specific login failures with a single generic security-safe message.
+  - Added shared in-module rate limiting utilities (IP + email buckets) and applied them to mentor `signup`, `resend verification`, and login attempts.
+  - Removed email-enumerating signup responses (`email already registered`) and replaced them with neutral success messaging.
+  - Updated resend-verification behavior to return neutral responses regardless of account existence, while still sending mail for eligible unverified mentors.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/auth_security.py`
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/controllers/__init__.py`
+  - `addons_dev/sp_olympiad/utils/__init__.py`
+  - `addons_dev/sp_olympiad/utils/security_rate_limit.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Reduce account enumeration risk in public auth flows.
+  - Keep login failures non-attributable (wrong password vs unverified vs inactive).
+  - Slow down brute-force and verification-email abuse attempts with practical per-window throttling.
+- Verification:
+  - `PYTHONPYCACHEPREFIX=/tmp/pycache python3 -m compileall -q addons_dev/sp_olympiad`
+  - `git -C addons_dev/sp_olympiad diff -- controllers/mentor_signup.py controllers/auth_security.py utils/security_rate_limit.py`
+
 ### 2026-04-22 - Mentor Signup Verification/Login Enforcement (Odoo 19)
 
 - Summary:

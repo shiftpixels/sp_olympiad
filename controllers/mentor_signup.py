@@ -2,6 +2,8 @@ from odoo import http, _
 from odoo.http import request
 import logging
 
+from ..utils.security_rate_limit import is_rate_limited, register_attempt
+
 _logger = logging.getLogger(__name__)
 
 
@@ -14,6 +16,18 @@ class MentorSignupController(http.Controller):
             '1' if default else '0'
         )
         return str(value).strip().lower() in {'1', 'true', 'yes', 'on'}
+
+    @staticmethod
+    def _generic_signup_notice():
+        return _('If the provided email is eligible, you will receive an email with next steps.')
+
+    @staticmethod
+    def _generic_resend_notice():
+        return _('If the provided email exists and is pending verification, a new verification email has been sent.')
+
+    @staticmethod
+    def _rate_limit_error():
+        return _('Too many attempts. Please wait a few minutes and try again.')
 
     def _render_signup(self, **kwargs):
         countries = request.env['res.country'].sudo().search([])
@@ -38,18 +52,29 @@ class MentorSignupController(http.Controller):
         success = kwargs.get('success')
         resend = kwargs.get('resend')
         verified = kwargs.get('verified')
+        generic_notice = kwargs.get('generic_notice')
+        error_code = kwargs.get('error')
+
         success_message = None
         if success:
             if resend:
-                success_message = _('Verification email sent again. Please check your inbox.')
+                success_message = self._generic_resend_notice()
+            elif generic_notice:
+                success_message = self._generic_signup_notice()
             elif verified:
                 success_message = _('Registration completed successfully. You can log in now.')
             else:
                 success_message = _('Your registration has been submitted. Please check your email to verify your account.')
 
+        error_message = None
+        if error_code == 'rate_limit':
+            error_message = self._rate_limit_error()
+        elif error_code:
+            error_message = _('Request could not be completed. Please try again.')
+
         return self._render_signup(
             success=success,
-            error=kwargs.get('error'),
+            error=error_message,
             success_message=success_message,
         )
 
@@ -87,21 +112,19 @@ class MentorSignupController(http.Controller):
                 form_data=form_data,
             )
 
-        existing_user = request.env['res.users'].sudo().search([('login', '=', email)], limit=1)
-        if existing_user:
+        if is_rate_limited('signup', email=email):
             return self._render_signup(
-                error=_('This email is already registered.'),
+                error=self._rate_limit_error(),
                 form_data=form_data,
             )
-
-        existing_mentor = request.env['sp_olympiad.mentor'].sudo().search([('email', '=', email)], limit=1)
-        if existing_mentor:
-            return self._render_signup(
-                error=_('This email is already registered as a mentor.'),
-                form_data=form_data,
-            )
+        register_attempt('signup', email=email)
 
         verification_enabled = self._get_bool_param('sp_olympiad.mentor_verification_enabled', default=True)
+
+        existing_user = request.env['res.users'].sudo().search([('login', '=', email)], limit=1)
+        existing_mentor = request.env['sp_olympiad.mentor'].sudo().search([('email', '=', email)], limit=1)
+        if existing_user or existing_mentor:
+            return request.redirect('/mentor/signup?success=1&generic_notice=1')
 
         try:
             with request.env.cr.savepoint():
@@ -209,16 +232,17 @@ class MentorSignupController(http.Controller):
     def mentor_resend_verify(self, **post):
         """Resend verification email."""
         if not self._get_bool_param('sp_olympiad.mentor_verification_enabled', default=True):
-            return request.redirect('/mentor/signup?error=1')
+            return request.redirect('/mentor/signup?success=1&generic_notice=1')
 
         email = (post.get('email') or '').strip().lower()
-        if not email:
-            return request.redirect('/mentor/signup?error=1')
+        if is_rate_limited('resend', email=email):
+            return request.redirect('/mentor/signup?error=rate_limit')
+        register_attempt('resend', email=email)
 
-        mentor = request.env['sp_olympiad.mentor'].sudo().search([('email', '=', email)], limit=1)
-        if mentor and not mentor.verified:
-            mentor.generate_verification_token()
-            mentor.send_verification_email()
-            return request.redirect('/mentor/signup?success=1&resend=1')
+        if email:
+            mentor = request.env['sp_olympiad.mentor'].sudo().search([('email', '=', email)], limit=1)
+            if mentor and not mentor.verified:
+                mentor.generate_verification_token()
+                mentor.send_verification_email()
 
-        return request.redirect('/mentor/signup?error=1')
+        return request.redirect('/mentor/signup?success=1&resend=1')
