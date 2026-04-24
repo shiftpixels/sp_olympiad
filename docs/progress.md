@@ -141,6 +141,24 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Change Log
 
+### 2026-04-25 - Security Audit Remediation
+
+- Summary:
+  - Added missing `ir.rule` to `sp_olympiad.mentor` model to restrict mentors to viewing only their own profile data, preventing an IDOR vulnerability.
+  - Removed write/create/unlink privileges from the Jury group for the Event Accommodation model in `ir.model.access.csv`, resolving a privilege escalation issue.
+  - Added validation for `country_id` in the `mentor_signup` controller to ensure the country exists before record creation, preventing PostgreSQL 500 errors.
+  - Implemented `@api.ondelete` guard in `OlympiadEventAccommodation` model to enforce data integrity by preventing deletion of past dates.
+- Files:
+  - `addons_dev/sp_olympiad/security/sp_olympiad_security.xml`
+  - `addons_dev/sp_olympiad/security/ir.model.access.csv`
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/models/olympiad_event_accommodation.py`
+- Why:
+  - Fix high and medium severity security vulnerabilities identified in the recent codebase audit (IDOR, Privilege Escalation).
+  - Align models with `GEMINI.md` architectural requirements for UI protection.
+- Verification:
+  - Code compiled and verified using `python3 -m compileall -q addons_dev/sp_olympiad`.
+
 ### 2026-04-22 - Mentor Auth Anti-Enumeration and Login Message Hardening
 
 - Summary:

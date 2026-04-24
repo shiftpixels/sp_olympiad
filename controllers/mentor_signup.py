@@ -106,6 +106,14 @@ class MentorSignupController(http.Controller):
                 form_data=form_data,
             )
 
+        if country_id_int:
+            country_exists = request.env['res.country'].sudo().search_count([('id', '=', country_id_int)])
+            if not country_exists:
+                return self._render_signup(
+                    error=_('Invalid country selected.'),
+                    form_data=form_data,
+                )
+
         if len(password) < 8:
             return self._render_signup(
                 error=_('Password must be at least 8 characters long.'),

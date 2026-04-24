@@ -1,10 +1,17 @@
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class OlympiadEventAccommodation(models.Model):
     _name = 'sp_olympiad.event.accommodation'
     _description = 'Olympiad Event Accommodation Date'
     _order = 'sequence, date, id'
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_guard(self):
+        for record in self:
+            if record.date and record.date < fields.Date.today():
+                raise ValidationError("Cannot delete past accommodation dates for data integrity.")
 
     @api.model
     def _default_date(self):
