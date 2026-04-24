@@ -142,6 +142,7 @@ class MentorSignupController(http.Controller):
                     'login': email,
                     'email': email,
                     'password': password,
+                    'phone': phone,
                     'active': not verification_enabled,
                 })
 

@@ -155,6 +155,16 @@ When this document is expanded into a full user guide, recommended sections are:
 - Verification:
   - Odoo module upgraded successfully without XML parsing or Disjoint Group constraint errors.
 
+### 2026-04-25 - Mentor to User Phone Number Synchronization
+
+- Summary:
+  - Updated `mentor_signup.py` to pass the `phone` field into the `res.users` creation dictionary so that the main user account also has the phone number stored.
+  - Ran a data migration script via Odoo shell to sync the `phone` number of existing `sp_olympiad.mentor` records to their related `res.users` accounts.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+- Why:
+  - Ensure consistency between the mentor profile and the underlying user account data (similar to how email is synced).
+
 ### 2026-04-25 - Removed Redundant Fields from Mentor Model & Views
 
 - Summary:
