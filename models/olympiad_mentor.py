@@ -20,6 +20,10 @@ class OlympiadMentor(models.Model):
         help='Subject area (e.g. Physics, Mathematics, Biology)'
     )
     phone = fields.Char(string='Phone')
+    whatsapp = fields.Char(
+        string='WhatsApp',
+        help='WhatsApp contact number'
+    )
     verified = fields.Boolean(
         string='Email Verified',
         default=False,

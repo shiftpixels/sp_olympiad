@@ -91,6 +91,7 @@ class MentorSignupController(http.Controller):
         country_id_int = int(country_id) if country_id and country_id.isdigit() else False
         branch = (post.get('branch') or '').strip()
         phone = (post.get('phone') or '').strip()
+        whatsapp = (post.get('whatsapp') or '').strip()
 
         form_data = {
             'name': name,
@@ -98,6 +99,7 @@ class MentorSignupController(http.Controller):
             'country_id': country_id_int,
             'branch': branch,
             'phone': phone,
+            'whatsapp': whatsapp,
         }
 
         if not all([name, email, password]):
@@ -158,6 +160,7 @@ class MentorSignupController(http.Controller):
                     'country_id': country_id_int,
                     'branch': branch,
                     'phone': phone,
+                    'whatsapp': whatsapp,
                 }
                 if not verification_enabled:
                     mentor_values['verified'] = True

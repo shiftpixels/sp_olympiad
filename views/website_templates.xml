@@ -220,6 +220,15 @@
                                                        placeholder="+1234567890"/>
                                             </div>
 
+                                            <!-- WhatsApp -->
+                                            <div class="mb-3">
+                                                <label for="whatsapp" class="form-label fw-bold">WhatsApp</label>
+                                                <input type="tel" id="whatsapp" name="whatsapp" class="form-control"
+                                                       t-attf-value="{{form_data.whatsapp if form_data else ''}}"
+                                                       placeholder="+1234567890"/>
+                                                <div class="form-text">For quick communication</div>
+                                            </div>
+
                                             <!-- Submit -->
                                             <div class="d-grid gap-2 mt-4">
                                                 <button type="submit" class="btn btn-primary btn-lg">

@@ -44,6 +44,7 @@
                             <field name="country_id"/>
                             <field name="branch"/>
                             <field name="phone"/>
+                            <field name="whatsapp"/>
                         </group>
                     </group>
 
@@ -64,6 +65,7 @@
                 <field name="email"/>
                 <field name="country_id"/>
                 <field name="branch"/>
+                <field name="whatsapp"/>
                 <field name="verified"/>
             </list>
         </field>

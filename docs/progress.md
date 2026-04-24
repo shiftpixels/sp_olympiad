@@ -155,6 +155,21 @@ When this document is expanded into a full user guide, recommended sections are:
 - Verification:
   - Odoo module upgraded successfully without XML parsing or Disjoint Group constraint errors.
 
+### 2026-04-25 - Added WhatsApp Field to Mentor Registration
+
+- Summary:
+  - Added `whatsapp` field to `sp_olympiad.mentor` model.
+  - Added WhatsApp input field to the public `/mentor/signup` web form.
+  - Updated `mentor_signup.py` controller to capture and save the WhatsApp number.
+  - Added the `whatsapp` field to the Mentor Admin form and list views.
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+  - `addons_dev/sp_olympiad/views/mentor_views.xml`
+  - `addons_dev/sp_olympiad/views/website_templates.xml`
+- Why:
+  - Allow collecting WhatsApp numbers specifically, as requested, laying the groundwork for a more dynamic "Mentor Settings" configuration in the future.
+
 ### 2026-04-25 - Mentor to User Phone Number Synchronization
 
 - Summary:
