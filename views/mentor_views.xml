@@ -39,7 +39,6 @@
                             <field name="email"/>
                             <field name="user_id"/>
                             <field name="verified"/>
-                            <field name="active"/>
                         </group>
                         <group>
                             <field name="country_id"/>
@@ -47,10 +46,7 @@
                             <field name="phone"/>
                         </group>
                     </group>
-                    <group string="Verification">
-                        <field name="verification_token" readonly="1"/>
-                        <field name="token_expiry" readonly="1"/>
-                    </group>
+
                     <group string="Dates">
                         <field name="created_date" readonly="1"/>
                     </group>
@@ -69,7 +65,6 @@
                 <field name="country_id"/>
                 <field name="branch"/>
                 <field name="verified"/>
-                <field name="active"/>
             </list>
         </field>
     </record>

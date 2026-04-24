@@ -155,6 +155,21 @@ When this document is expanded into a full user guide, recommended sections are:
 - Verification:
   - Odoo module upgraded successfully without XML parsing or Disjoint Group constraint errors.
 
+### 2026-04-25 - Removed Redundant Fields from Mentor Model & Views
+
+- Summary:
+  - Removed `active` and `user_active` fields from `sp_olympiad.mentor` model and views.
+  - Removed `action_activate` and `action_deactivate` methods.
+  - Removed `verification_token` and `token_expiry` fields from the mentor form view as they are internal technical fields.
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+  - `addons_dev/sp_olympiad/views/mentor_views.xml`
+- Why:
+  - The `active` toggle on the mentor record was causing confusion and bypassed validation.
+  - Verification tokens are internal UUIDs managed completely under the hood. Displaying them in the admin form adds unnecessary clutter and provides no value to the admin user.
+- Verification:
+  - Module updated and `sp_olympiad.field_sp_olympiad_mentor__active` was successfully dropped from the database.
+
 ### 2026-04-25 - Security Audit Remediation
 
 - Summary:

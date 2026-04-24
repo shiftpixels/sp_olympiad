@@ -26,14 +26,6 @@ class OlympiadMentor(models.Model):
         readonly=True,
         help='Set to True after email verification.'
     )
-    user_active = fields.Boolean(
-        string='User Active',
-        related='user_id.active',
-        store=True,
-        help='Mirror of related user\'s active status'
-    )
-    active = fields.Boolean(default=True)
-
     # System fields
     user_id = fields.Many2one(
         'res.users',
@@ -197,11 +189,3 @@ class OlympiadMentor(models.Model):
                 'sticky': False,
             }
         }
-
-    def action_deactivate(self):
-        """Deactivate mentor."""
-        self.write({'active': False})
-
-    def action_activate(self):
-        """Activate mentor."""
-        self.write({'active': True})
