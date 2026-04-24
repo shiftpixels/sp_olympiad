@@ -141,6 +141,20 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Change Log
 
+### 2026-04-25 - Restricted Mentor Access to Portal (Frontend Only)
+
+- Summary:
+  - Changed `sp_olympiad.group_sp_olympiad_mentor` to imply `base.group_portal` instead of `base.group_user`. Mentors can no longer access the Odoo Backend Dashboard (unless explicitly granted admin/staff privileges).
+  - Explicitly granted `read` and `write` access for Mentors on `sp_olympiad.mentor` model via `access_sp_olympiad_mentor_self` since they lost `base.group_user` permissions.
+  - Ran a manual SQL migration to clean up existing mentor users, removing them from the exclusive `Role / User` group and inserting them into `Role / Portal` to satisfy Odoo's disjoint group constraints.
+- Files:
+  - `addons_dev/sp_olympiad/security/sp_olympiad_security.xml`
+- Why:
+  - Isolate mentors completely from ERP backend menus (Discuss, Calendar, Contacts).
+  - Provide a clean, restricted, and safe experience exclusively via the `/my/olympiad` portal route.
+- Verification:
+  - Odoo module upgraded successfully without XML parsing or Disjoint Group constraint errors.
+
 ### 2026-04-25 - Security Audit Remediation
 
 - Summary:
