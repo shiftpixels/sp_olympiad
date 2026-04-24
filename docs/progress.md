@@ -155,6 +155,16 @@ When this document is expanded into a full user guide, recommended sections are:
 - Verification:
   - Odoo module upgraded successfully without XML parsing or Disjoint Group constraint errors.
 
+### 2026-04-25 - Critical Security Fix: Mentor Default User Group
+
+- Summary:
+  - Fixed a critical privilege escalation flaw in `mentor_signup.py`.
+  - Explicitly passed `group_ids` to assign ONLY the `base.group_portal` when a new `res.users` account is created during mentor signup.
+- Files:
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+- Why:
+  - When `res.users` is created via the backend ORM without specifying groups, Odoo defaults to assigning `base.group_user` (Internal User). This meant newly signed-up mentors were getting backend access rights despite our earlier isolation work. By explicitly passing the portal group during creation, we enforce strict isolation from the moment of registration.
+
 ### 2026-04-25 - Added WhatsApp Field to Mentor Registration
 
 - Summary:

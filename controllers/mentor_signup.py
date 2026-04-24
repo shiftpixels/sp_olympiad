@@ -139,6 +139,14 @@ class MentorSignupController(http.Controller):
         try:
             with request.env.cr.savepoint():
                 mentor_group = request.env.ref('sp_olympiad.group_sp_olympiad_mentor', raise_if_not_found=False)
+                portal_group = request.env.ref('base.group_portal', raise_if_not_found=False)
+
+                initial_groups = []
+                if portal_group:
+                    initial_groups.append(portal_group.id)
+                if not verification_enabled and mentor_group:
+                    initial_groups.append(mentor_group.id)
+
                 user = request.env['res.users'].sudo().with_context(no_reset_password=True).create({
                     'name': name,
                     'login': email,
@@ -146,12 +154,14 @@ class MentorSignupController(http.Controller):
                     'password': password,
                     'phone': phone,
                     'active': not verification_enabled,
+                    'group_ids': [(6, 0, initial_groups)],
                 })
 
-                if not verification_enabled and mentor_group and hasattr(user, 'group_ids'):
-                    user.sudo().write({
-                        'group_ids': [(4, mentor_group.id)],
-                    })
+                # We don't need this anymore as we set group_ids above
+                # if not verification_enabled and mentor_group and hasattr(user, 'group_ids'):
+                #     user.sudo().write({
+                #         'group_ids': [(4, mentor_group.id)],
+                #     })
 
                 mentor_values = {
                     'name': name,
