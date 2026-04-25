@@ -141,7 +141,20 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Change Log
 
-### 2026-04-25 - Restricted Mentor Access to Portal (Frontend Only)
+### 2026-04-25 - Implemented 3-Layer Country Validation (Model, Controller, Business Logic)
+
+- Summary:
+  - Layer 1 (Model): Added `required=True` to `country_id` in `sp_olympiad.mentor` to prevent null values.
+  - Layer 2 (Controller): Enhanced `mentor_submit` to check for existence of `country_id` and return a user-friendly error if missing or invalid.
+  - Layer 3 (Business Logic): Added `@api.constrains` to `sp_olympiad.mentor` to restrict registrations to specific countries ('TR', 'DE').
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+  - `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+- Why:
+  - To ensure data integrity, improve user feedback during signup, and enforce regional business restrictions at the database level.
+- Verification:
+  - `python3 -m compileall -q addons_dev/sp_olympiad` completed without errors.
+  - Manual verification of the signup form with invalid/missing country input.
 
 - Summary:
   - Changed `sp_olympiad.group_sp_olympiad_mentor` to imply `base.group_portal` instead of `base.group_user`. Mentors can no longer access the Odoo Backend Dashboard (unless explicitly granted admin/staff privileges).

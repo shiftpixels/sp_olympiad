@@ -13,6 +13,7 @@ class OlympiadMentor(models.Model):
     country_id = fields.Many2one(
         'res.country',
         string='Country',
+        required=True,
         help='Country of residence'
     )
     branch = fields.Char(
@@ -80,8 +81,15 @@ class OlympiadMentor(models.Model):
                         record.email
                     )
 
-    @api.constrains('user_id')
-    def _check_unique_user(self):
+    @api.constrains('country_id')
+    def _check_allowed_countries(self):
+        """Ensure only specific countries can register (Layer 3)."""
+        allowed_codes = ['TR', 'DE']
+        for record in self:
+            if record.country_id and record.country_id.code not in allowed_codes:
+                raise ValidationError(
+                    _("Registration is currently only available for mentors from: %s") % ", ".join(allowed_codes)
+                )
         for record in self:
             if record.user_id:
                 existing = self.search(

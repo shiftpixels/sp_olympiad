@@ -109,12 +109,17 @@ class MentorSignupController(http.Controller):
             )
 
         if country_id_int:
-            country_exists = request.env['res.country'].sudo().search_count([('id', '=', country_id_int)])
+            country_exists = request.env['res.country'].sudo().browse(country_id_int).exists()
             if not country_exists:
                 return self._render_signup(
                     error=_('Invalid country selected.'),
                     form_data=form_data,
                 )
+        else:
+            return self._render_signup(
+                error=_('Please select a country.'),
+                form_data=form_data,
+            )
 
         if len(password) < 8:
             return self._render_signup(
