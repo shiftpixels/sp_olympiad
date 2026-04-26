@@ -11,3 +11,7 @@ access_sp_olympiad_category_admin,sp.olympiad.category.admin,model_sp_olympiad_c
 access_sp_olympiad_category_staff,sp.olympiad.category.staff,model_sp_olympiad_category,sp_olympiad.group_sp_olympiad_staff,1,1,1,1
 access_sp_olympiad_category_mentor,sp.olympiad.category.mentor,model_sp_olympiad_category,sp_olympiad.group_sp_olympiad_mentor,1,0,0,0
 access_sp_olympiad_category_jury,sp.olympiad.category.jury,model_sp_olympiad_category,sp_olympiad.group_sp_olympiad_jury,1,0,0,0
+access_sp_olympiad_student_admin,sp.olympiad.student.admin,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_admin,1,1,1,1
+access_sp_olympiad_student_staff,sp.olympiad.student.staff,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_staff,1,1,1,1
+access_sp_olympiad_student_mentor,sp.olympiad.student.mentor,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_mentor,1,1,1,1
+access_sp_olympiad_student_jury,sp.olympiad.student.jury,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_jury,1,0,0,0
