@@ -13,13 +13,12 @@ class ResUsers(models.Model):
         for user in self:
             if not user.active:
                 raise AccessDenied()
-            mentor = self.env['sp_olympiad.mentor'].sudo().search([
-                '|',
-                ('user_id', '=', user.id),
-                ('email', '=', user.login),
-            ], limit=1)
-            if mentor:
-                if not mentor.verified:
+            # Only check mentor verification for users who are actually mentors
+            if user.has_group('sp_olympiad.group_sp_olympiad_mentor'):
+                mentor = self.env['sp_olympiad.mentor'].sudo().search([
+                    ('user_id', '=', user.id),
+                ], limit=1)
+                if mentor and not mentor.verified:
                     _logger.info("Blocked login for unverified mentor: %s", user.login)
                     raise AccessDenied()
         return auth_info
