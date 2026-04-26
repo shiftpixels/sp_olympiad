@@ -89,6 +89,12 @@ class OlympiadStudent(models.Model):
         tracking=True,
         help='Whether the student requires a visa for travel'
     )
+    excursion = fields.Boolean(
+        string='Excursion',
+        default=False,
+        tracking=True,
+        help='Whether the student participates in excursion'
+    )
     tshirt_size = fields.Selection(
         [
             ('XS', 'Extra Small'),
@@ -127,13 +133,20 @@ class OlympiadStudent(models.Model):
     )
 
     # Relations
-    project_id = fields.Many2one(
-        'sp_olympiad.project',
-        string='Project',
+    mentor_id = fields.Many2one(
+        'res.users',
+        string='Mentor',
         required=True,
-        ondelete='cascade',
         tracking=True,
-        help='Project this student belongs to'
+        help='Mentor who manages this student'
+    )
+    project_ids = fields.Many2many(
+        'sp_olympiad.project',
+        'student_project_rel',
+        'student_id',
+        'project_id',
+        string='Projects',
+        help='Projects this student has participated in'
     )
 
     @api.depends('first_name', 'last_name')
@@ -145,17 +158,14 @@ class OlympiadStudent(models.Model):
             else:
                 record.name = record.first_name or record.last_name or ''
 
-    @api.depends('birth_date', 'project_id.dates')
+    @api.depends('birth_date')
     def _compute_age(self):
-        """Compute student's age at event date."""
+        """Compute student's age at current date."""
         for record in self:
-            if record.birth_date and record.project_id and record.project_id.dates:
+            if record.birth_date:
                 today = date.today()
-                event_date = record.project_id.dates
-                
-                # Calculate age at event date
-                age = event_date.year - record.birth_date.year - (
-                    (event_date.month, event_date.day) < (record.birth_date.month, record.birth_date.day)
+                age = today.year - record.birth_date.year - (
+                    (today.month, today.day) < (record.birth_date.month, record.birth_date.day)
                 )
                 record.age = max(age, 0)
             else:
@@ -177,56 +187,20 @@ class OlympiadStudent(models.Model):
             if record.birth_date and record.birth_date > date.today():
                 raise ValidationError(_('Birth date cannot be in the future.'))
 
-    @api.constrains('age', 'project_id')
+    @api.constrains('age')
     def _check_age_range(self):
-        """Validate student age is within event's age boundaries."""
+        """Validate student age is within reasonable range."""
         for record in self:
-            if not record.project_id or not record.project_id.dates:
-                continue
-            
-            event = record.project_id
-            if not event.age_junior_min or not event.age_junior_max:
-                continue
-            if not event.age_senior_min or not event.age_senior_max:
-                continue
-            
-            # Check if age is within valid range
-            if record.age < event.age_junior_min or record.age > event.age_senior_max:
+            if record.age < 5 or record.age > 25:
                 raise ValidationError(
                     _(
-                        'Student age (%(age)d) must be between %(min_age)d and %(max_age)d years old.'
+                        'Student age (%(age)d) must be between 5 and 25 years old.'
                     ) % {
                         'age': record.age,
-                        'min_age': event.age_junior_min,
-                        'max_age': event.age_senior_max,
                     }
                 )
 
-    @api.constrains('accommodation_ids', 'no_accommodation', 'project_id')
-    def _check_accommodation_dates(self):
-        """Validate accommodation dates are within event date range."""
-        for record in self:
-            if record.no_accommodation or not record.project_id:
-                continue
-            
-            event = record.project_id
-            if not event.dates or not event.date_end:
-                continue
-            
-            for accommodation in record.accommodation_ids:
-                if accommodation.date < event.dates or accommodation.date > event.date_end:
-                    raise ValidationError(
-                        _(
-                            'Accommodation date (%(date)s) must be within event date range '
-                            '(%(start)s to %(end)s).'
-                        ) % {
-                            'date': accommodation.date,
-                            'start': event.dates,
-                            'end': event.date_end,
-                        }
-                    )
-
-    @api.constrains('no_accommodation', 'accommodation_ids')
+    @api.constrains('accommodation_ids', 'no_accommodation')
     def _check_accommodation_consistency(self):
         """Validate accommodation consistency."""
         for record in self:
@@ -236,17 +210,21 @@ class OlympiadStudent(models.Model):
                 )
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_in_active_project(self):
+    def _unlink_except_in_active_projects(self):
         """Prevent deletion of students in active projects."""
         for record in self:
-            if record.project_id and record.project_id.state in ['draft', 'open', 'submitted', 'paid']:
+            # Check if student is in any active projects
+            active_projects = record.project_ids.filtered(
+                lambda p: p.state in ['draft', 'open', 'submitted', 'paid']
+            )
+            if active_projects:
+                project_names = ', '.join(active_projects.mapped('name'))
                 raise ValidationError(
                     _(
-                        'Cannot delete student "%(name)s" because the project "%(project)s" is in %(state)s state. '
-                        'Archive the project or change its state first.'
+                        'Cannot delete student "%(name)s" because they are in active projects: %(projects)s. '
+                        'Archive the projects or change their state first.'
                     ) % {
                         'name': record.name,
-                        'project': record.project_id.name,
-                        'state': record.project_id.state,
+                        'projects': project_names,
                     }
                 )

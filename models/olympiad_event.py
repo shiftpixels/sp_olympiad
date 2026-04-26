@@ -7,6 +7,12 @@ class OlympiadEvent(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Event Name', required=True, tracking=True)
+    year = fields.Integer(
+        string='Year',
+        required=True,
+        tracking=True,
+        help='Event year'
+    )
     code_prefix = fields.Char(
         string='Code Prefix',
         required=True,
@@ -73,6 +79,10 @@ class OlympiadEvent(models.Model):
     age_junior_max = fields.Integer(string='Junior Max Age', default=14, required=True)
     age_senior_min = fields.Integer(string='Senior Min Age', default=15, required=True)
     age_senior_max = fields.Integer(string='Senior Max Age', default=19, required=True)
+    research_paper_deadline = fields.Date(
+        string='Research Paper Deadline',
+        help='Deadline for research paper submission'
+    )
     accommodation_ids = fields.One2many(
         'sp_olympiad.event.accommodation',
         'event_id',

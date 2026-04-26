@@ -15,3 +15,11 @@ access_sp_olympiad_student_admin,sp.olympiad.student.admin,model_sp_olympiad_stu
 access_sp_olympiad_student_staff,sp.olympiad.student.staff,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_staff,1,1,1,1
 access_sp_olympiad_student_mentor,sp.olympiad.student.mentor,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_mentor,1,1,1,1
 access_sp_olympiad_student_jury,sp.olympiad.student.jury,model_sp_olympiad_student,sp_olympiad.group_sp_olympiad_jury,1,0,0,0
+access_sp_olympiad_project_admin,sp.olympiad.project.admin,model_sp_olympiad_project,sp_olympiad.group_sp_olympiad_admin,1,1,1,1
+access_sp_olympiad_project_staff,sp.olympiad.project.staff,model_sp_olympiad_project,sp_olympiad.group_sp_olympiad_staff,1,1,1,1
+access_sp_olympiad_project_mentor,sp.olympiad.project.mentor,model_sp_olympiad_project,sp_olympiad.group_sp_olympiad_mentor,1,1,1,0
+access_sp_olympiad_project_jury,sp.olympiad.project.jury,model_sp_olympiad_project,sp_olympiad.group_sp_olympiad_jury,1,0,0,0
+access_sp_olympiad_certificate_admin,sp.olympiad.certificate.admin,model_sp_olympiad_certificate,sp_olympiad.group_sp_olympiad_admin,1,1,1,1
+access_sp_olympiad_certificate_staff,sp.olympiad.certificate.staff,model_sp_olympiad_certificate,sp_olympiad.group_sp_olympiad_staff,1,1,1,1
+access_sp_olympiad_certificate_mentor,sp.olympiad.certificate.mentor,model_sp_olympiad_certificate,sp_olympiad.group_sp_olympiad_mentor,1,1,0,0
+access_sp_olympiad_certificate_jury,sp.olympiad.certificate.jury,model_sp_olympiad_certificate,sp_olympiad.group_sp_olympiad_jury,1,0,0,0

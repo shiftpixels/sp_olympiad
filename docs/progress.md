@@ -731,3 +731,134 @@ When this document is expanded into a full user guide, recommended sections are:
 - Verification:
   - Warning banner removed from form.
   - Help text is attached to `active` field in form view.
+
+### 2026-04-26 - Added Migration Notes Documentation
+
+- Summary:
+  - Created comprehensive migration notes document
+  - Documented all schema changes from 2026-04-25
+  - Added upgrade instructions and rollback procedures
+  - Included data validation queries
+- Files:
+  - `addons_dev/sp_olympiad/docs/migration_notes.md`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Provide clear guidance for module upgrades
+  - Document breaking changes and data migration requirements
+  - Follow AGENTS.md rule: Include migration notes for schema changes
+- Verification:
+  - Migration notes document created
+  - All schema changes documented
+  - Upgrade procedures defined
+  - Data validation queries included
+
+### 2026-04-26 - Reviewed @api.model Decorators
+
+- Summary:
+  - Reviewed all model methods for missing @api.model decorators
+  - All methods have appropriate decorators (@api.constrains, @api.depends, @api.ondelete, @api.model)
+  - Controller methods use @http.route and @staticmethod decorators appropriately
+  - Utility functions are standalone Python functions (no decorators needed)
+- Files:
+  - `addons_dev/sp_olympiad/models/*.py`
+  - `addons_dev/sp_olympiad/controllers/*.py`
+  - `addons_dev/sp_olympiad/utils/*.py`
+- Why:
+  - Ensure all methods have proper decorators for Odoo ORM behavior
+  - Follow AGENTS.md rule: Use appropriate decorators for model methods
+- Verification:
+  - All model methods have appropriate decorators
+  - No missing @api.model decorators found
+  - All decorators are correctly applied
+
+### 2026-04-26 - Removed Unnecessary sudo() Usage
+
+- Summary:
+  - Removed unnecessary sudo() usage from main.py controller
+  - Mentor users now access their own mentor records without sudo()
+  - All other sudo() usages reviewed and confirmed as necessary
+- Files:
+  - `addons_dev/sp_olympiad/controllers/main.py`
+- Why:
+  - Mentor users have proper access rights to their own mentor records
+  - Unnecessary sudo() usage bypasses access control and security
+  - Follows AGENTS.md rule: Avoid unnecessary sudo()
+- Verification:
+  - Python syntax check passed
+  - Module upgrade successful
+  - Mentor dashboard still works correctly without sudo()
+
+### 2026-04-26 - Added Demo Data Management
+
+- Summary:
+  - Added demo data load and clear buttons to Olympiad settings
+  - Created action_load_demo_data() and action_clear_demo_data() methods
+  - Added demo data section to settings view
+- Files:
+  - `addons_dev/sp_olympiad/models/res_config_settings.py`
+  - `addons_dev/sp_olympiad/views/res_config_settings_views.xml`
+- Why:
+  - Allow easy demo data management for testing
+  - Provide convenient way to load/clear sample data
+- Verification:
+  - Python syntax check passed
+  - Module upgrade successful
+  - Demo data buttons work correctly
+
+## Phase 2 Progress Update
+
+### Completed Features
+- ✅ Module scaffold
+- ✅ `sp_olympiad.event` model (base fields, pricing, deadlines, medal thresholds, age boundaries)
+- ✅ `sp_olympiad.event.accommodation` model
+- ✅ `sp_olympiad.category` model
+- ✅ `sp_olympiad.mentor` model
+- ✅ Security setup (groups, ACL, record rules)
+- ✅ `res.config.settings` (general settings, rate limiting, demo data)
+- ✅ Mentor signup system
+- ✅ Website features
+- ✅ Security audit and code quality improvements
+
+### In Progress
+- 🔄 `sp_olympiad.student` model (created, needs refinement)
+- 🔄 `sp_olympiad.project` model (not yet created)
+- 🔄 `sp_olympiad.certificate` model (not yet created)
+
+### Next Steps
+1. Refine `sp_olympiad.student` model (remove project_id, add mentor_id)
+2. Create `sp_olympiad.project` model
+3. Create `sp_olympiad.certificate` model
+4. Implement student-project many-to-many relationship
+5. Add certificate generation logic
+6. Create views and security for new models
+
+## Design Decisions
+
+### Student-Project Relationship
+- **Decision**: Many-to-many relationship between Student and Project
+- **Reasoning**: Students can participate in multiple projects across different years
+- **Implementation**: Student.project_ids (Many2many) + Project.student_ids (Many2many)
+
+### Excursion Management
+- **Decision**: Excursion participation is person-based
+- **Reasoning**: Each participant (mentor and students) can choose excursion independently
+- **Implementation**: 
+  - Mentor.excursion (in mentor model)
+  - Student.excursion (in student model)
+  - Project.mentor_excursion (for project-level tracking)
+
+### Certificate System
+- **Decision**: Separate certificate types for participation and medals
+- **Reasoning**: Different certificate types for different achievements
+- **Implementation**:
+  - Certificate model with certificate_type field
+  - Automatic certificate generation on state='finished'
+  - Certificate types: participation, gold, silver, bronze, honorable_mention
+
+### State Management
+- **Decision**: Project state flow: draft → published → finished
+- **Reasoning**: 
+  - draft: Not visible on website
+  - published: Open for applications, visible on website
+  - finished: Event completed, certificates generated
+- **Implementation**: State field with proper transitions and validations

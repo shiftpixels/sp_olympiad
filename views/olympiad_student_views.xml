@@ -15,8 +15,9 @@
                     <field name="country_id"/>
                     <field name="tshirt_size"/>
                     <field name="visa_required"/>
+                    <field name="excursion"/>
                     <field name="accommodation_nights"/>
-                    <field name="project_id"/>
+                    <field name="mentor_id"/>
                 </list>
             </field>
         </record>
@@ -66,11 +67,7 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
@@ -80,25 +77,26 @@
             <field name="name">sp.olympiad.student.search</field>
             <field name="model">sp_olympiad.student</field>
             <field name="arch" type="xml">
-                <search string="Search Students">
+                <search>
                     <field name="name"/>
                     <field name="first_name"/>
                     <field name="last_name"/>
                     <field name="country_id"/>
-                    <field name="project_id"/>
+                    <field name="project_ids"/>
                     <field name="gender"/>
                     <field name="tshirt_size"/>
+                    <field name="mentor_id"/>
                     <filter string="Visa Required" name="visa_required" domain="[('visa_required', '=', True)]"/>
                     <filter string="No Accommodation" name="no_accommodation" domain="[('no_accommodation', '=', True)]"/>
                     <separator/>
                     <filter string="Male" name="gender_male" domain="[('gender', '=', 'M')]"/>
                     <filter string="Female" name="gender_female" domain="[('gender', '=', 'F')]"/>
                     <filter string="Diverse" name="gender_diverse" domain="[('gender', '=', 'D')]"/>
-                    <group expand="0" string="Group By">
+                    <group>
                         <filter string="Gender" name="group_gender" context="{'group_by': 'gender'}"/>
                         <filter string="Country" name="group_country" context="{'group_by': 'country_id'}"/>
                         <filter string="T-Shirt Size" name="group_tshirt" context="{'group_by': 'tshirt_size'}"/>
-                        <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Mentor" name="group_mentor" context="{'group_by': 'mentor_id'}"/>
                     </group>
                 </search>
             </field>
@@ -109,13 +107,12 @@
             <field name="name">Students</field>
             <field name="res_model">sp_olympiad.student</field>
             <field name="view_mode">list,form</field>
-            <field name="context">{'default_project_id': active_id}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create your first student!
                 </p>
                 <p>
-                    Students are participants in Olympiad projects. Each student belongs to a project
+                    Students are participants in Olympiad projects. Each student belongs to a mentor
                     and can have accommodation, dietary requirements, and other logistics information.
                 </p>
             </field>

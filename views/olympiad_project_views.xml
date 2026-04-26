@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Project Views -->
+        
+        <!-- List View -->
+        <record id="view_olympiad_project_list" model="ir.ui.view">
+            <field name="name">sp.olympiad.project.list</field>
+            <field name="model">sp_olympiad.project</field>
+            <field name="arch" type="xml">
+                <list string="Projects">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="year"/>
+                    <field name="mentor_id"/>
+                    <field name="category_id"/>
+                    <field name="state"/>
+                    <field name="num_students"/>
+                    <field name="total_amount"/>
+                    <field name="paid"/>
+                    <field name="medal"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_olympiad_project_form" model="ir.ui.view">
+            <field name="name">sp.olympiad.project.form</field>
+            <field name="model">sp_olympiad.project</field>
+            <field name="arch" type="xml">
+                <form string="Project">
+                    <header>
+                        <button name="action_publish" string="Publish" type="object"
+                                invisible="state != 'draft'" class="btn-primary"/>
+                        <button name="action_finish" string="Finish" type="object"
+                                invisible="state != 'published'" class="btn-success"/>
+                        <button name="action_cancel" string="Cancel" type="object"
+                                invisible="state not in ['draft', 'published']" class="btn-danger"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,published,finished"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <h2>
+                                <field name="code" readonly="1"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="event_id"/>
+                                <field name="year" readonly="1"/>
+                                <field name="category_id"/>
+                                <field name="mentor_id"/>
+                                <field name="pres_lang"/>
+                                <field name="mentor_excursion"/>
+                            </group>
+                            <group>
+                                <field name="state"/>
+                                <field name="paid"/>
+                                <field name="total_amount" readonly="1"/>
+                                <field name="medal" readonly="1"/>
+                                <field name="age_group" readonly="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Files">
+                                <group>
+                                    <field name="abstract_file" filename="abstract_filename"/>
+                                    <field name="research_paper" filename="research_paper_filename"/>
+                                </group>
+                            </page>
+                            <page string="Students">
+                                <field name="student_ids">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="age"/>
+                                        <field name="gender"/>
+                                        <field name="country_id"/>
+                                        <field name="visa_required"/>
+                                        <field name="tshirt_size"/>
+                                        <field name="excursion"/>
+                                        <field name="no_accommodation"/>
+                                        <field name="accommodation_ids" widget="many2many_tags" 
+                                               invisible="no_accommodation"/>
+                                        <field name="accommodation_nights" readonly="1"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Evaluation">
+                                <group>
+                                    <field name="project_score" readonly="1"/>
+                                    <field name="medal" readonly="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_olympiad_project_search" model="ir.ui.view">
+            <field name="name">sp.olympiad.project.search</field>
+            <field name="model">sp_olympiad.project</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="mentor_id"/>
+                    <field name="category_id"/>
+                    <field name="event_id"/>
+                    <field name="state"/>
+                    <field name="medal"/>
+                    <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Published" name="state_published" domain="[('state', '=', 'published')]"/>
+                    <filter string="Finished" name="state_finished" domain="[('state', '=', 'finished')]"/>
+                    <filter string="Paid" name="paid" domain="[('paid', '=', True)]"/>
+                    <filter string="Unpaid" name="unpaid" domain="[('paid', '=', False)]"/>
+                    <separator/>
+                    <filter string="Gold" name="medal_gold" domain="[('medal', '=', 'gold')]"/>
+                    <filter string="Silver" name="medal_silver" domain="[('medal', '=', 'silver')]"/>
+                    <filter string="Bronze" name="medal_bronze" domain="[('medal', '=', 'bronze')]"/>
+                    <filter string="Honorable Mention" name="medal_hm" domain="[('medal', '=', 'honorable_mention')]"/>
+                    <separator/>
+                    <filter string="Junior" name="age_group_junior" domain="[('age_group', '=', 'junior')]"/>
+                    <filter string="Senior" name="age_group_senior" domain="[('age_group', '=', 'senior')]"/>
+                    <group>
+                        <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Mentor" name="group_mentor" context="{'group_by': 'mentor_id'}"/>
+                        <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                        <filter string="Event" name="group_event" context="{'group_by': 'event_id'}"/>
+                        <filter string="Medal" name="group_medal" context="{'group_by': 'medal'}"/>
+                        <filter string="Age Group" name="group_age_group" context="{'group_by': 'age_group'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_olympiad_project" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">sp_olympiad.project</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first project!
+                </p>
+                <p>
+                    Projects are submissions to Olympiad events. Each project belongs to a mentor,
+                    has students, and can be evaluated by jury members.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_olympiad_projects"
+                  name="Projects"
+                  parent="menu_olympiad_root"
+                  action="action_olympiad_project"
+                  sequence="20"
+                  groups="sp_olympiad.group_sp_olympiad_admin,sp_olympiad.group_sp_olympiad_staff"/>
+    </data>
+</odoo>
