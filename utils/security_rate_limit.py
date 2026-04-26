@@ -6,14 +6,67 @@ from threading import Lock
 from odoo.http import request
 
 
-_RATE_LIMIT_CONFIG = {
-    'login': {'window_seconds': 600, 'ip_limit': 30, 'email_limit': 10},
-    'signup': {'window_seconds': 600, 'ip_limit': 12, 'email_limit': 3},
-    'resend': {'window_seconds': 600, 'ip_limit': 20, 'email_limit': 5},
-}
-
 _ATTEMPT_BUCKETS = defaultdict(deque)
 _BUCKET_LOCK = Lock()
+
+
+def _get_rate_limit_config(scope):
+    """Get rate limit configuration from system parameters."""
+    try:
+        env = request.env if request else None
+        if not env:
+            # Fallback to default values if no environment available
+            return _get_default_config(scope)
+        
+        config = {}
+        if scope == 'login':
+            config = {
+                'window_seconds': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.login_rate_limit_window', '600')),
+                'ip_limit': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.login_rate_limit_ip', '30')),
+                'email_limit': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.login_rate_limit_email', '10')),
+            }
+        elif scope == 'signup':
+            config = {
+                'window_seconds': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.signup_rate_limit_window', '600')),
+                'ip_limit': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.signup_rate_limit_ip', '12')),
+                'email_limit': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.signup_rate_limit_email', '3')),
+            }
+        elif scope == 'resend':
+            config = {
+                'window_seconds': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.resend_rate_limit_window', '600')),
+                'ip_limit': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.resend_rate_limit_ip', '20')),
+                'email_limit': int(env['ir.config_parameter'].sudo().get_param(
+                    'sp_olympiad.resend_rate_limit_email', '5')),
+            }
+        else:
+            return _get_default_config(scope)
+        
+        # Validate and ensure minimum values
+        config['window_seconds'] = max(config['window_seconds'], 60)
+        config['ip_limit'] = max(config['ip_limit'], 1)
+        config['email_limit'] = max(config['email_limit'], 1)
+        
+        return config
+    except Exception:
+        return _get_default_config(scope)
+
+
+def _get_default_config(scope):
+    """Get default rate limit configuration as fallback."""
+    default_configs = {
+        'login': {'window_seconds': 600, 'ip_limit': 30, 'email_limit': 10},
+        'signup': {'window_seconds': 600, 'ip_limit': 12, 'email_limit': 3},
+        'resend': {'window_seconds': 600, 'ip_limit': 20, 'email_limit': 5},
+    }
+    return default_configs.get(scope, {})
 
 
 def _normalize_email(email):
@@ -41,7 +94,7 @@ def _get_client_ip():
 
 
 def _iter_scope_keys(scope, email):
-    config = _RATE_LIMIT_CONFIG.get(scope)
+    config = _get_rate_limit_config(scope)
     if not config:
         return []
 
@@ -60,7 +113,7 @@ def _prune_bucket(bucket, cutoff):
 
 
 def is_rate_limited(scope, email=None):
-    config = _RATE_LIMIT_CONFIG.get(scope)
+    config = _get_rate_limit_config(scope)
     if not config:
         return False
 
@@ -81,7 +134,7 @@ def is_rate_limited(scope, email=None):
 
 
 def register_attempt(scope, email=None):
-    config = _RATE_LIMIT_CONFIG.get(scope)
+    config = _get_rate_limit_config(scope)
     if not config:
         return
 

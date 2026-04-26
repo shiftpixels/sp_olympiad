@@ -141,6 +141,26 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Security Audit & Code Review TODO List
 
+### 2026-04-26 - Made Rate Limiting Configurable via System Parameters
+
+- Summary:
+  - Replaced hardcoded rate limiting configuration with system parameters
+  - Added 9 new configuration fields to res.config.settings for rate limiting
+  - Updated security_rate_limit.py to read configuration from system parameters
+  - Added fallback to default values if parameters are not set
+  - Added validation to ensure minimum values for rate limiting parameters
+- Files:
+  - `addons_dev/sp_olympiad/models/res_config_settings.py`
+  - `addons_dev/sp_olympiad/utils/security_rate_limit.py`
+- Why:
+  - Allows administrators to configure rate limiting without code changes
+  - Follows AGENTS.md rule: Prefer configurable features over hardcoded business logic
+  - Provides flexibility for different security requirements
+- Verification:
+  - Python syntax check passed
+  - Module upgrade successful
+  - Rate limiting now reads from system parameters with fallback to defaults
+
 ### 2026-04-26 - Fixed N+1 Query in Category Deletion Guard
 
 - Summary:
