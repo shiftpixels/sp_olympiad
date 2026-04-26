@@ -87,7 +87,8 @@ class OlympiadCategory(models.Model):
             if duplicate:
                 raise ValidationError('Category code must be unique!')
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_in_events(self):
         event_model = self.env['sp_olympiad.event'].sudo().with_context(active_test=False)
         for record in self:
             linked_event = event_model.search([('category_ids', 'in', record.id)], limit=1)
@@ -102,4 +103,3 @@ class OlympiadCategory(models.Model):
                         'event': linked_event.display_name,
                     }
                 )
-        return super().unlink()
