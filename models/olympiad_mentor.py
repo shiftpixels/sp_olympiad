@@ -90,6 +90,9 @@ class OlympiadMentor(models.Model):
                 raise ValidationError(
                     _("Registration is currently only available for mentors from: %s") % ", ".join(allowed_codes)
                 )
+
+    @api.constrains('user_id')
+    def _check_unique_user(self):
         for record in self:
             if record.user_id:
                 existing = self.search(

@@ -139,6 +139,35 @@ When this document is expanded into a full user guide, recommended sections are:
 5. PDF criteria generation and usage
 6. Role-based operations (admin vs internal users)
 
+## Security Audit & Code Review TODO List
+
+### 2026-04-26 - AGENTS.md Compliance Review
+
+**High Priority Issues:**
+1. **_check_allowed_countries method bug** - user_id check is in wrong decorator (@api.constrains('country_id') instead of separate @api.constrains('user_id'))
+2. **Missing @api.ondelete decorators** - unlink methods need deletion guards
+3. **Unnecessary sudo() usage** - Review and remove across all models and controllers
+
+**Medium Priority Issues:**
+4. **N+1 query in olympiad_category.py unlink** - Search inside loop
+5. **Missing @api.model decorators** - Some static methods need decorators
+6. **Hardcoded rate limiting** - Should be configurable via system parameters
+7. **Missing migration notes** - Schema changes need documentation
+
+**Low Priority Issues:**
+8. **Missing data/ and demo/ directories** - Module structure incomplete
+
+**Files to Review:**
+- `addons_dev/sp_olympiad/models/olympiad_category.py`
+- `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+- `addons_dev/sp_olympiad/models/olympiad_event.py`
+- `addons_dev/sp_olympiad/models/olympiad_event_accommodation.py`
+- `addons_dev/sp_olympiad/models/res_users.py`
+- `addons_dev/sp_olympiad/controllers/mentor_signup.py`
+- `addons_dev/sp_olympiad/controllers/main.py`
+- `addons_dev/sp_olympiad/controllers/auth_security.py`
+- `addons_dev/sp_olympiad/utils/security_rate_limit.py`
+
 ## Change Log
 
 ### 2026-04-25 - Implemented 3-Layer Country Validation (Model, Controller, Business Logic)
