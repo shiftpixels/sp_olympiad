@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo Categories -->
+        <record id="demo_category_env" model="sp_olympiad.category">
+            <field name="name">Environmental Science</field>
+            <field name="code">ENV</field>
+            <field name="max_participants">3</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_bio" model="sp_olympiad.category">
+            <field name="name">Biology</field>
+            <field name="code">BIO</field>
+            <field name="max_participants">2</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_phy" model="sp_olympiad.category">
+            <field name="name">Physics</field>
+            <field name="code">PHY</field>
+            <field name="max_participants">3</field>
+            <field name="sequence">30</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_mat" model="sp_olympiad.category">
+            <field name="name">Mathematics</field>
+            <field name="code">MAT</field>
+            <field name="max_participants">2</field>
+            <field name="sequence">40</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Demo Event -->
+        <record id="demo_event_germany_2027" model="sp_olympiad.event">
+            <field name="name">Innovate Germany 2027</field>
+            <field name="code_prefix">IG27</field>
+            <field name="dates">2027-06-15</field>
+            <field name="date_end">2027-06-18</field>
+            <field name="state">draft</field>
+            <field name="category_ids" eval="[(6, 0, [ref('demo_category_env'), ref('demo_category_bio'), ref('demo_category_phy'), ref('demo_category_mat')])]"/>
+        </record>
+        
+        <!-- Demo Admin User -->
+        <record id="demo_user_admin" model="res.users">
+            <field name="name">Admin User</field>
+            <field name="login">admin@example.com</field>
+            <field name="email">admin@example.com</field>
+            <field name="password">admin123</field>
+            <field name="active">True</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        </record>
+        
+        <!-- Demo Users and Mentors -->
+        <record id="demo_user_mentor1" model="res.users">
+            <field name="name">Test Mentor 1</field>
+            <field name="login">mentor@test.com</field>
+            <field name="email">mentor@test.com</field>
+            <field name="password">Mentor123!</field>
+            <field name="active">True</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal'), ref('sp_olympiad.group_sp_olympiad_mentor')])]"/>
+        </record>
+        
+        <record id="demo_mentor1" model="sp_olympiad.mentor">
+            <field name="name">Test Mentor 1</field>
+            <field name="email">mentor@test.com</field>
+            <field name="user_id" ref="demo_user_mentor1"/>
+            <field name="country_id" ref="base.de"/>
+            <field name="verified">True</field>
+        </record>
+        
+        <record id="demo_user_mentor2" model="res.users">
+            <field name="name">Test Mentor 2</field>
+            <field name="login">mentor2@test.com</field>
+            <field name="email">mentor2@test.com</field>
+            <field name="password">Mentor123!</field>
+            <field name="active">True</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal'), ref('sp_olympiad.group_sp_olympiad_mentor')])]"/>
+        </record>
+        
+        <record id="demo_mentor2" model="sp_olympiad.mentor">
+            <field name="name">Test Mentor 2</field>
+            <field name="email">mentor2@test.com</field>
+            <field name="user_id" ref="demo_user_mentor2"/>
+            <field name="country_id" ref="base.de"/>
+            <field name="verified">True</field>
+        </record>
+        
+        <record id="demo_user_mentor3" model="res.users">
+            <field name="name">Test Mentor 3</field>
+            <field name="login">mentor3@test.com</field>
+            <field name="email">mentor3@test.com</field>
+            <field name="password">Mentor123!</field>
+            <field name="active">True</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_portal'), ref('sp_olympiad.group_sp_olympiad_mentor')])]"/>
+        </record>
+        
+        <record id="demo_mentor3" model="sp_olympiad.mentor">
+            <field name="name">Test Mentor 3</field>
+            <field name="email">mentor3@test.com</field>
+            <field name="user_id" ref="demo_user_mentor3"/>
+            <field name="country_id" ref="base.tr"/>
+            <field name="verified">True</field>
+        </record>
+        
+    </data>
+</odoo>

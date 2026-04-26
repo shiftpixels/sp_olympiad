@@ -29,6 +29,9 @@ Core module providing the foundation for the Olympiad Management Suite.
         'views/website_templates.xml',
         'views/menu_views.xml',
     ],
+    'demo': [
+        'data/demo_data.xml',
+    ],
     'application': True,
     'installable': True,
     'auto_install': False,

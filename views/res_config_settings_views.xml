@@ -35,9 +35,92 @@
                                 <field name="mentor_verification_enabled" string="Require Email Verification"/>
                             </setting>
                         </block>
-                    </app>
-                </xpath>
-            </field>
-        </record>
-    </data>
-</odoo>
+                        <block title="Rate Limiting" name="olympiad_rate_limiting">
+                            <div class="row mt16" name="rate_limiting_header">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-info">
+                                        Configure rate limiting for security purposes. These settings help prevent brute force attacks and abuse.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt16" name="rate_limiting_login">
+                                <div class="col-12">
+                                    <h4>Login Rate Limiting</h4>
+                                </div>
+                            </div>
+                            <div class="row mt8" name="rate_limiting_login_fields">
+                                <div class="col-4">
+                                    <label for="login_rate_limit_window" class="col-form-label">Window (seconds)</label>
+                                    <field name="login_rate_limit_window" class="oe_inline"/>
+                                </div>
+                                <div class="col-4">
+                                    <label for="login_rate_limit_ip" class="col-form-label">IP Limit</label>
+                                    <field name="login_rate_limit_ip" class="oe_inline"/>
+                                </div>
+                                <div class="col-4">
+                                    <label for="login_rate_limit_email" class="col-form-label">Email Limit</label>
+                                    <field name="login_rate_limit_email" class="oe_inline"/>
+                                </div>
+                            </div>
+                            <div class="row mt16" name="rate_limiting_signup">
+                                <div class="col-12">
+                                    <h4>Signup Rate Limiting</h4>
+                                </div>
+                            </div>
+                            <div class="row mt8" name="rate_limiting_signup_fields">
+                                <div class="col-4">
+                                    <label for="signup_rate_limit_window" class="col-form-label">Window (seconds)</label>
+                                    <field name="signup_rate_limit_window" class="oe_inline"/>
+                                </div>
+                                <div class="col-4">
+                                    <label for="signup_rate_limit_ip" class="col-form-label">IP Limit</label>
+                                    <field name="signup_rate_limit_ip" class="oe_inline"/>
+                                </div>
+                                <div class="col-4">
+                                    <label for="signup_rate_limit_email" class="col-form-label">Email Limit</label>
+                                    <field name="signup_rate_limit_email" class="oe_inline"/>
+                                </div>
+                            </div>
+                            <div class="row mt16" name="rate_limiting_resend">
+                                <div class="col-12">
+                                    <h4>Resend Verification Rate Limiting</h4>
+                                </div>
+                            </div>
+                            <div class="row mt8" name="rate_limiting_resend_fields">
+                                <div class="col-4">
+                                    <label for="resend_rate_limit_window" class="col-form-label">Window (seconds)</label>
+                                    <field name="resend_rate_limit_window" class="oe_inline"/>
+                                </div>
+                                <div class="col-4">
+                                    <label for="resend_rate_limit_ip" class="col-form-label">IP Limit</label>
+                                    <field name="resend_rate_limit_ip" class="oe_inline"/>
+                                </div>
+                                <div class="col-4">
+                                    <label for="resend_rate_limit_email" class="col-form-label">Email Limit</label>
+                                    <field name="resend_rate_limit_email" class="oe_inline"/>
+                                </div>
+                            </div>
+                         </block>
+                         <block title="Demo Data" name="olympiad_demo_data">
+                             <div class="row mt16" name="demo_data_header">
+                                 <div class="col-lg-12">
+                                     <div class="alert alert-warning">
+                                         Load or clear demo data for testing purposes. This will create sample categories, events, and mentors.
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row mt16" name="demo_data_buttons">
+                                 <div class="col-6">
+                                     <button name="action_load_demo_data" type="object" string="Load Demo Data" class="btn-primary"/>
+                                 </div>
+                                 <div class="col-6">
+                                     <button name="action_clear_demo_data" type="object" string="Clear Demo Data" class="btn-danger"/>
+                                 </div>
+                             </div>
+                         </block>
+                     </app>
+                 </xpath>
+             </field>
+         </record>
+     </data>
+ </odoo>
