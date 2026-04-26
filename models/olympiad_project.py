@@ -341,34 +341,11 @@ class OlympiadProject(models.Model):
         return True
 
     def action_finish(self):
-        """Finish project and generate certificates."""
+        """Finish project."""
         self.write({'state': 'finished'})
-        self._generate_certificates()
         return True
 
     def action_cancel(self):
         """Cancel project."""
         self.write({'state': 'cancelled'})
         return True
-
-    def _generate_certificates(self):
-        """Generate certificates for all students."""
-        for record in self:
-            # Generate participation certificate for all students
-            for student in record.student_ids:
-                self.env['sp_olympiad.certificate'].create({
-                    'student_id': student.id,
-                    'project_id': record.id,
-                    'certificate_type': 'participation',
-                    'year': record.year,
-                })
-            
-            # Generate medal certificates if applicable
-            if record.medal != 'participation':
-                for student in record.student_ids:
-                    self.env['sp_olympiad.certificate'].create({
-                        'student_id': student.id,
-                        'project_id': record.id,
-                        'certificate_type': record.medal,
-                        'year': record.year,
-                    })

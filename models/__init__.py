@@ -4,6 +4,5 @@ from . import olympiad_category
 from . import olympiad_mentor
 from . import olympiad_student
 from . import olympiad_project
-from . import olympiad_certificate
 from . import res_config_settings
 from . import res_users

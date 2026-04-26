@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <delete id="menu_olympiad_certificates" model="ir.ui.menu"/>
+        <delete id="action_olympiad_certificate" model="ir.actions.act_window"/>
+        <delete id="view_olympiad_certificate_search" model="ir.ui.view"/>
+        <delete id="view_olympiad_certificate_form" model="ir.ui.view"/>
+        <delete id="view_olympiad_certificate_list" model="ir.ui.view"/>
+    </data>
+</odoo>
