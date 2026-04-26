@@ -2,8 +2,6 @@ from odoo import http, _
 from odoo.http import request
 import logging
 
-from ..utils.security_rate_limit import is_rate_limited, register_attempt
-
 _logger = logging.getLogger(__name__)
 
 
@@ -127,12 +125,13 @@ class MentorSignupController(http.Controller):
                 form_data=form_data,
             )
 
-        if is_rate_limited('signup', email=email):
+        rate_limit = request.env['sp_security.rate_limit_attempt'].sudo()
+        if rate_limit._check_rate_limit('signup', email=email):
             return self._render_signup(
                 error=self._rate_limit_error(),
                 form_data=form_data,
             )
-        register_attempt('signup', email=email)
+        rate_limit._register_attempt('signup', email=email)
 
         verification_enabled = self._get_bool_param('sp_olympiad.mentor_verification_enabled', default=True)
 
@@ -262,9 +261,10 @@ class MentorSignupController(http.Controller):
             return request.redirect('/mentor/signup?success=1&generic_notice=1')
 
         email = (post.get('email') or '').strip().lower()
-        if is_rate_limited('resend', email=email):
+        rate_limit = request.env['sp_security.rate_limit_attempt'].sudo()
+        if rate_limit._check_rate_limit('resend', email=email):
             return request.redirect('/mentor/signup?error=rate_limit')
-        register_attempt('resend', email=email)
+        rate_limit._register_attempt('resend', email=email)
 
         if email:
             mentor = request.env['sp_olympiad.mentor'].sudo().search([('email', '=', email)], limit=1)
