@@ -90,16 +90,20 @@ class OlympiadCategory(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_in_events(self):
         event_model = self.env['sp_olympiad.event'].sudo().with_context(active_test=False)
-        for record in self:
-            linked_event = event_model.search([('category_ids', 'in', record.id)], limit=1)
-            if linked_event:
-                raise ValidationError(
-                    _(
-                        "You cannot delete category '%(category)s' because it is used in event "
-                        "'%(event)s'. Archive it instead."
+        # Batch operation: find all events linked to any of the categories being deleted
+        linked_events = event_model.search([('category_ids', 'in', self.ids)])
+        if linked_events:
+            # Map events to their linked categories
+            for event in linked_events:
+                linked_categories = event.category_ids & self
+                for category in linked_categories:
+                    raise ValidationError(
+                        _(
+                            "You cannot delete category '%(category)s' because it is used in event "
+                            "'%(event)s'. Archive it instead."
+                        )
+                        % {
+                            'category': category.display_name,
+                            'event': event.display_name,
+                        }
                     )
-                    % {
-                        'category': record.display_name,
-                        'event': linked_event.display_name,
-                    }
-                )

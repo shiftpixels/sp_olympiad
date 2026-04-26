@@ -141,6 +141,70 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Security Audit & Code Review TODO List
 
+### 2026-04-26 - Fixed N+1 Query in Category Deletion Guard
+
+- Summary:
+  - Replaced N+1 query pattern with batch operation in category deletion guard
+  - Single query to find all events linked to categories being deleted
+  - Memory-based filtering instead of repeated database queries
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+- Why:
+  - Previous implementation had N+1 query issue (search inside loop)
+  - Batch operation significantly improves performance for bulk deletions
+  - Follows AGENTS.md rule: Prefer batch operations over loops
+- Verification:
+  - Python syntax check passed
+  - Module upgrade successful
+
+### 2026-04-26 - Fixed Login Check for Non-Mentor Users
+
+- Summary:
+  - Fixed login credential check to only apply mentor verification for users who are actually mentors
+  - Removed email-based mentor search that was blocking non-mentor users
+  - Added group check before mentor verification
+- Files:
+  - `addons_dev/sp_olympiad/models/res_users.py`
+- Why:
+  - Previous implementation was checking mentor verification for all users, including non-mentors
+  - This was blocking legitimate non-mentor users from logging in
+- Verification:
+  - Non-mentor users can now login successfully
+  - Mentor verification still enforced for actual mentors
+
+### 2026-04-26 - Added @api.ondelete Decorator to Category Model
+
+- Summary:
+  - Replaced unlink() method with @api.ondelete(at_uninstall=False) decorator
+  - Follows Odoo 19 convention for deletion guards
+  - Maintains same validation logic for event-linked categories
+  - Removes unnecessary super().unlink() call
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_category.py`
+- Why:
+  - Aligns with AGENTS.md rule: Use @api.ondelete(at_uninstall=False)
+  - Provides proper deletion guard for Odoo 19
+- Verification:
+  - Module upgrade successful
+  - Category deletion blocked when linked to events
+  - Test passed: @api.ondelete decorator working correctly
+
+### 2026-04-26 - Fixed Constraint Separation in Mentor Model
+
+- Summary:
+  - Moved user_id uniqueness check to separate @api.constrains('user_id') decorator
+  - Fixed bug where user_id validation was incorrectly placed in country_id constraint
+  - Added security audit TODO list to progress.md
+- Files:
+  - `addons_dev/sp_olympiad/models/olympiad_mentor.py`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - This fixes a critical bug where user_id validation was not properly triggered
+  - when user_id field changed, only when country_id changed
+- Verification:
+  - Python syntax check passed
+  - Module upgrade successful
+
 ### 2026-04-26 - AGENTS.md Compliance Review
 
 **High Priority Issues:**
