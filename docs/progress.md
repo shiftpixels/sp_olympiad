@@ -141,6 +141,23 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Security Audit & Code Review TODO List
 
+### 2026-04-26 - Removed Unnecessary sudo() Usage
+
+- Summary:
+  - Removed unnecessary sudo() usage from main.py controller
+  - Mentor users now access their own mentor records without sudo()
+  - All other sudo() usages reviewed and confirmed as necessary
+- Files:
+  - `addons_dev/sp_olympiad/controllers/main.py`
+- Why:
+  - Mentor users have proper access rights to their own mentor records
+  - Unnecessary sudo() usage bypasses access control and security
+  - Follows AGENTS.md rule: Avoid unnecessary sudo()
+- Verification:
+  - Python syntax check passed
+  - Module upgrade successful
+  - Mentor dashboard still works correctly without sudo()
+
 ### 2026-04-26 - Made Rate Limiting Configurable via System Parameters
 
 - Summary:
@@ -228,14 +245,14 @@ When this document is expanded into a full user guide, recommended sections are:
 ### 2026-04-26 - AGENTS.md Compliance Review
 
 **High Priority Issues:**
-1. **_check_allowed_countries method bug** - user_id check is in wrong decorator (@api.constrains('country_id') instead of separate @api.constrains('user_id'))
-2. **Missing @api.ondelete decorators** - unlink methods need deletion guards
-3. **Unnecessary sudo() usage** - Review and remove across all models and controllers
+1. ✅ **_check_allowed_countries method bug** - user_id check is in wrong decorator (@api.constrains('country_id') instead of separate @api.constrains('user_id'))
+2. ✅ **Missing @api.ondelete decorators** - unlink methods need deletion guards
+3. ✅ **Unnecessary sudo() usage** - Review and remove across all models and controllers
 
 **Medium Priority Issues:**
-4. **N+1 query in olympiad_category.py unlink** - Search inside loop
+4. ✅ **N+1 query in olympiad_category.py unlink** - Search inside loop
 5. **Missing @api.model decorators** - Some static methods need decorators
-6. **Hardcoded rate limiting** - Should be configurable via system parameters
+6. ✅ **Hardcoded rate limiting** - Should be configurable via system parameters
 7. **Missing migration notes** - Schema changes need documentation
 
 **Low Priority Issues:**

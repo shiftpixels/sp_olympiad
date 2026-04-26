@@ -24,7 +24,7 @@ class OlympiadWebsite(http.Controller):
         if user.has_group('base.group_system'):
             return request.render("sp_olympiad.my_olympiad_dashboard", {})
 
-        mentor = request.env['sp_olympiad.mentor'].sudo().search(
+        mentor = request.env['sp_olympiad.mentor'].search(
             [('user_id', '=', user.id)],
             limit=1
         )
