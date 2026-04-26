@@ -89,4 +89,112 @@
         <field name="groups" eval="[(4, ref('sp_olympiad.group_sp_olympiad_mentor'))]"/>
     </record>
 
+    <!-- Project Access Rules -->
+    <record id="access_sp_olympiad_project_user" model="ir.model.access">
+        <field name="name">sp_olympiad.project.user</field>
+        <field name="model_id" ref="model_sp_olympiad_project"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_sp_olympiad_project_manager" model="ir.model.access">
+        <field name="name">sp_olympiad.project.manager</field>
+        <field name="model_id" ref="model_sp_olympiad_project"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_admin"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="access_sp_olympiad_project_mentor" model="ir.model.access">
+        <field name="name">sp_olympiad.project.mentor</field>
+        <field name="model_id" ref="model_sp_olympiad_project"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_mentor"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_sp_olympiad_project_staff" model="ir.model.access">
+        <field name="name">sp_olympiad.project.staff</field>
+        <field name="model_id" ref="model_sp_olympiad_project"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_staff"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_sp_olympiad_project_jury" model="ir.model.access">
+        <field name="name">sp_olympiad.project.jury</field>
+        <field name="model_id" ref="model_sp_olympiad_project"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_jury"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Student Access Rules -->
+    <record id="access_sp_olympiad_student_user" model="ir.model.access">
+        <field name="name">sp_olympiad.student.user</field>
+        <field name="model_id" ref="model_sp_olympiad_student"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_sp_olympiad_student_manager" model="ir.model.access">
+        <field name="name">sp_olympiad.student.manager</field>
+        <field name="model_id" ref="model_sp_olympiad_student"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_admin"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record id="access_sp_olympiad_student_mentor" model="ir.model.access">
+        <field name="name">sp_olympiad.student.mentor</field>
+        <field name="model_id" ref="model_sp_olympiad_student"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_mentor"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="access_sp_olympiad_student_staff" model="ir.model.access">
+        <field name="name">sp_olympiad.student.staff</field>
+        <field name="model_id" ref="model_sp_olympiad_student"/>
+        <field name="group_id" ref="sp_olympiad.group_sp_olympiad_staff"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <!-- Mentor Own Projects Rule -->
+    <record id="rule_mentor_own_projects" model="ir.rule">
+        <field name="name">Mentors can only see their own projects</field>
+        <field name="model_id" ref="model_sp_olympiad_project"/>
+        <field name="domain_force">[('mentor_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('sp_olympiad.group_sp_olympiad_mentor'))]"/>
+    </record>
+
+    <!-- Mentor Own Students Rule -->
+    <record id="rule_mentor_own_students" model="ir.rule">
+        <field name="name">Mentors can only see their own students</field>
+        <field name="model_id" ref="model_sp_olympiad_student"/>
+        <field name="domain_force">[('mentor_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('sp_olympiad.group_sp_olympiad_mentor'))]"/>
+    </record>
+
 </odoo>

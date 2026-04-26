@@ -17,7 +17,6 @@
                     <field name="state"/>
                     <field name="num_students"/>
                     <field name="total_amount"/>
-                    <field name="paid"/>
                     <field name="medal"/>
                 </list>
             </field>
@@ -58,7 +57,6 @@
                             </group>
                             <group>
                                 <field name="state"/>
-                                <field name="paid"/>
                                 <field name="total_amount" readonly="1"/>
                                 <field name="medal" readonly="1"/>
                                 <field name="age_group" readonly="1"/>
@@ -117,8 +115,6 @@
                     <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Published" name="state_published" domain="[('state', '=', 'published')]"/>
                     <filter string="Finished" name="state_finished" domain="[('state', '=', 'finished')]"/>
-                    <filter string="Paid" name="paid" domain="[('paid', '=', True)]"/>
-                    <filter string="Unpaid" name="unpaid" domain="[('paid', '=', False)]"/>
                     <separator/>
                     <filter string="Gold" name="medal_gold" domain="[('medal', '=', 'gold')]"/>
                     <filter string="Silver" name="medal_silver" domain="[('medal', '=', 'silver')]"/>

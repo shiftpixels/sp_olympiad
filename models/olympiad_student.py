@@ -209,13 +209,31 @@ class OlympiadStudent(models.Model):
                     _('Cannot select accommodation nights when "No Accommodation" is checked.')
                 )
 
+    @api.constrains('mentor_id')
+    def _check_mentor_group(self):
+        """Validate mentor belongs to Olympiad Mentor group."""
+        for record in self:
+            if record.mentor_id:
+                mentor_group = self.env.ref('sp_olympiad.group_sp_olympiad_mentor', raise_if_not_found=False)
+                admin_group = self.env.ref('sp_olympiad.group_sp_olympiad_admin', raise_if_not_found=False)
+                if mentor_group and admin_group:
+                    if not (record.mentor_id.has_group('sp_olympiad.group_sp_olympiad_mentor') or
+                            record.mentor_id.has_group('sp_olympiad.group_sp_olympiad_admin')):
+                        raise ValidationError(
+                            _(
+                                'Mentor "%(mentor)s" must belong to Olympiad Mentor or Admin group.'
+                            ) % {
+                                'mentor': record.mentor_id.name,
+                            }
+                        )
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_in_active_projects(self):
         """Prevent deletion of students in active projects."""
         for record in self:
             # Check if student is in any active projects
             active_projects = record.project_ids.filtered(
-                lambda p: p.state in ['draft', 'open', 'submitted', 'paid']
+                lambda p: p.state in ['draft', 'published']
             )
             if active_projects:
                 project_names = ', '.join(active_projects.mapped('name'))

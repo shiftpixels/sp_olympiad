@@ -87,12 +87,6 @@ class OlympiadProject(models.Model):
         ('finished', 'Finished'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', tracking=True, help='Project status')
-    paid = fields.Boolean(
-        string='Paid',
-        default=False,
-        tracking=True,
-        help='Whether payment has been completed'
-    )
 
     # Payment
     total_amount = fields.Float(
@@ -267,6 +261,21 @@ class OlympiadProject(models.Model):
             else:
                 record.medal = 'participation'
 
+    @api.constrains('mentor_id')
+    def _check_mentor_group(self):
+        """Validate mentor belongs to Olympiad Mentor group."""
+        for record in self:
+            if record.mentor_id:
+                if not (record.mentor_id.has_group('sp_olympiad.group_sp_olympiad_mentor') or
+                        record.mentor_id.has_group('sp_olympiad.group_sp_olympiad_admin')):
+                    raise ValidationError(
+                        _(
+                            'Mentor "%(mentor)s" must belong to Olympiad Mentor or Admin group.'
+                        ) % {
+                            'mentor': record.mentor_id.name,
+                        }
+                    )
+
     @api.constrains('num_students', 'category_id')
     def _check_max_participants(self):
         """Validate number of students does not exceed category limit."""
@@ -302,15 +311,6 @@ class OlympiadProject(models.Model):
             if record.state == 'published' and not record.abstract_file:
                 raise ValidationError(
                     _('Abstract file is required to publish a project.')
-                )
-
-    @api.constrains('state', 'paid')
-    def _check_payment_required(self):
-        """Validate payment is required for paid state."""
-        for record in self:
-            if record.state == 'paid' and not record.paid:
-                raise ValidationError(
-                    _('Payment must be completed to mark project as paid.')
                 )
 
     @api.constrains('research_paper', 'event_id')

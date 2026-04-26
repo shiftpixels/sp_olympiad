@@ -8,7 +8,7 @@ Olympiad Core
 =============
 Core module providing the foundation for the Olympiad Management Suite.
 """,
-    'author': "ShiftPixels",
+    'author': "Ahmet Cangir",
     'license': 'LGPL-3',
     'depends': [
         'base',
