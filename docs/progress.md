@@ -141,6 +141,45 @@ When this document is expanded into a full user guide, recommended sections are:
 
 ## Security Audit & Code Review TODO List
 
+### 2026-04-26 - Added Migration Notes Documentation
+
+- Summary:
+  - Created comprehensive migration notes document
+  - Documented all schema changes from 2026-04-25
+  - Added upgrade instructions and rollback procedures
+  - Included data validation queries
+- Files:
+  - `addons_dev/sp_olympiad/docs/migration_notes.md`
+  - `addons_dev/sp_olympiad/docs/progress.md`
+- Why:
+  - Provide clear guidance for module upgrades
+  - Document breaking changes and data migration requirements
+  - Follow AGENTS.md rule: Include migration notes for schema changes
+- Verification:
+  - Migration notes document created
+  - All schema changes documented
+  - Upgrade procedures defined
+  - Data validation queries included
+
+### 2026-04-26 - Reviewed @api.model Decorators
+
+- Summary:
+  - Reviewed all model methods for missing @api.model decorators
+  - All methods have appropriate decorators (@api.constrains, @api.depends, @api.ondelete, @api.model)
+  - Controller methods use @http.route and @staticmethod decorators appropriately
+  - Utility functions are standalone Python functions (no decorators needed)
+- Files:
+  - `addons_dev/sp_olympiad/models/*.py`
+  - `addons_dev/sp_olympiad/controllers/*.py`
+  - `addons_dev/sp_olympiad/utils/*.py`
+- Why:
+  - Ensure all methods have proper decorators for Odoo ORM behavior
+  - Follow AGENTS.md rule: Use appropriate decorators for model methods
+- Verification:
+  - All model methods have appropriate decorators
+  - No missing @api.model decorators found
+  - All decorators are correctly applied
+
 ### 2026-04-26 - Removed Unnecessary sudo() Usage
 
 - Summary:
@@ -251,12 +290,12 @@ When this document is expanded into a full user guide, recommended sections are:
 
 **Medium Priority Issues:**
 4. ✅ **N+1 query in olympiad_category.py unlink** - Search inside loop
-5. **Missing @api.model decorators** - Some static methods need decorators
+5. ✅ **Missing @api.model decorators** - Some static methods need decorators (reviewed - all methods have appropriate decorators)
 6. ✅ **Hardcoded rate limiting** - Should be configurable via system parameters
-7. **Missing migration notes** - Schema changes need documentation
+7. ✅ **Missing migration notes** - Schema changes need documentation
 
 **Low Priority Issues:**
-8. **Missing data/ and demo/ directories** - Module structure incomplete
+8. ✅ **Missing data/ and demo/ directories** - Module structure incomplete (demo data management implemented)
 
 **Files to Review:**
 - `addons_dev/sp_olympiad/models/olympiad_category.py`
